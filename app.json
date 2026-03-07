@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "jewel-e-app",
-    "slug": "jewel-e-app",
+    "name": "jewel-e",
+    "slug": "jewel-e",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "jeweleapp",
+    "scheme": "jewele",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
