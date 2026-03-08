@@ -1,42 +1,54 @@
-import { Platform } from 'react-native';
 import { Colors } from '@/src/constants/colors';
-import { SPACING } from '@/src/constants/spacing';
+import * as tokens from '@/src/theme/tokens';
 
 export { Colors } from '@/src/constants/colors';
 export { SPACING } from '@/src/constants/spacing';
+export {
+  spacing,
+  fontFamily,
+  fontWeight,
+  text,
+  tracking,
+  radius,
+  container,
+  easing,
+  transition,
+} from '@/src/theme/tokens';
+export { default as themeTokens } from '@/src/theme/tokens';
 
+/** Theme object – design tokens + app colors. Use for consistent styling with web app. */
 export const theme = {
-  colors: Colors.light,
-  spacing: SPACING,
-  borderRadius: {
-    sm: 6,
-    md: 10,
-    lg: 16,
-    full: 9999,
+  colors: {
+    ...Colors.light,
+    /** Web design system palette */
+    primary: tokens.colors.primary,
+    secondary: tokens.colors.secondary,
+    black: tokens.colors.black,
+    white: tokens.colors.white,
+    pink: tokens.colors.pink,
   },
-  fonts: Platform.select({
-    ios: {
-      sans: 'system-ui',
-      serif: 'Georgia',
-      mono: 'Menlo',
-    },
-    android: {
-      sans: 'Roboto',
-      serif: 'serif',
-      mono: 'monospace',
-    },
-    default: {
-      sans: 'System',
-      serif: 'serif',
-      mono: 'monospace',
-    },
-  }),
+  spacing: tokens.spacing,
+  borderRadius: tokens.radius,
+  fontFamily: tokens.fontFamily,
+  fontWeight: tokens.fontWeight,
+  text: tokens.text,
+  tracking: tokens.tracking,
+  container: tokens.container,
+  easing: tokens.easing,
+  transition: tokens.transition,
 };
 
 export function getTheme(isDark) {
   return {
     ...theme,
-    colors: isDark ? Colors.dark : Colors.light,
+    colors: {
+      ...(isDark ? Colors.dark : Colors.light),
+      primary: tokens.colors.primary,
+      secondary: tokens.colors.secondary,
+      black: tokens.colors.black,
+      white: tokens.colors.white,
+      pink: tokens.colors.pink,
+    },
   };
 }
 

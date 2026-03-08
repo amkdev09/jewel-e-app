@@ -1,6 +1,10 @@
+import { AppText } from '@/src/components/ui/AppText';
 import { SPACING } from '@/src/constants/spacing';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as Linking from 'expo-linking';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -11,72 +15,160 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const PURPLE_DARK = '#5b21b6';
+const PURPLE_LIGHT = '#a78bfa';
+const TEXT_DARK = '#1a1a1a';
+const TEXT_MUTED = '#6b7280';
+const BORDER_GRAY = '#e5e7eb';
+const BUTTON_GRAY = '#9ca3af';
+const GREEN_WHATSAPP = '#25d366';
+const FACEBOOK_BLUE = '#1877f2';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const login = useAuthStore((s) => s.login);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [mobileOrEmail, setMobileOrEmail] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password) {
-      Alert.alert('Error', 'Please enter email and password');
+  const handleContinue = () => {
+    if (!mobileOrEmail.trim()) {
+      Alert.alert('Error', 'Please enter mobile number or email');
       return;
     }
-    // setLoading(true);
-    // const result = await login(email.trim(), password);
-    // setLoading(false);
-    // if (result.success) {
+    if (!agreed) {
+      Alert.alert('Terms', 'Please acknowledge that you are at least 18 and agree to T&C and Privacy Policy.');
+      return;
+    }
+    setLoading(true);
+    // await login(mobileOrEmail.trim(), ...);
+    setLoading(false);
     router.replace('/(tabs)/home');
-    // } else {
-    // Alert.alert('Login Failed', result.message || 'Please try again');
-    // }
   };
 
+  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => { });
+  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => { });
+
   return (
-    <AuthLayout>
-      <View style={styles.container}>
-        <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>Sign in to continue</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor="#9ca3af"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-          editable={!loading}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#9ca3af"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          editable={!loading}
-        />
-
+    <AuthLayout scroll={true}>
+      <View style={styles.wrapper}>
+        {/* Back arrow */}
         <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleLogin}
-          disabled={loading}
+          style={styles.backBtn}
+          onPress={() => router.back()}
+          activeOpacity={0.7}
         >
-          <Text style={styles.buttonText}>
-            {loading ? 'Signing in...' : 'Sign in'}
-          </Text>
+          <Ionicons name="arrow-back" size={24} color={TEXT_DARK} />
         </TouchableOpacity>
 
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>{"Don't have an account? "}</Text>
-          <Link href="/(auth)/register" asChild>
-            <TouchableOpacity>
-              <Text style={styles.link}>Register</Text>
+        <View style={styles.scrollContent}>
+          {/* Keyhole icon in gradient circle */}
+          <View style={styles.iconWrap}>
+            <LinearGradient
+              colors={[PURPLE_LIGHT, PURPLE_DARK]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.keyholeCircle}
+            >
+              <Ionicons name="key" size={48} color="#fff" />
+            </LinearGradient>
+          </View>
+
+          <AppText variant="lg" weight="semiBold" style={styles.title}>Welcome back!</AppText>
+          <AppText variant="base" weight="regular" style={styles.desc}>
+            Login to unlock best prices and become an insider for our exclusive launches offers. Complete your profile and get ₹500 worth of xCLusive Points.
+          </AppText>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Mobile Number or Email"
+            placeholderTextColor={TEXT_MUTED}
+            value={mobileOrEmail}
+            onChangeText={setMobileOrEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            editable={!loading}
+          />
+
+          <TouchableOpacity
+            style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
+            onPress={handleContinue}
+            disabled={loading}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.continueBtnText}>CONTINUE TO LOGIN</Text>
+          </TouchableOpacity>
+
+          {/* T&C checkbox row */}
+          <View style={styles.tcRow}>
+            <TouchableOpacity
+              style={[styles.checkbox, agreed && styles.checkboxChecked]}
+              onPress={() => setAgreed(!agreed)}
+              activeOpacity={0.7}
+            >
+              {agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
             </TouchableOpacity>
-          </Link>
+            <View style={styles.tcTextWrap}>
+              <Text style={styles.tcText}>
+                By continuing you acknowledge that you are at least 18 years old and have read and agree to CaratLane's{' '}
+              </Text>
+              <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
+                <Text style={styles.tcLink}>T&C</Text>
+              </TouchableOpacity>
+              <Text style={styles.tcText}> </Text>
+              <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
+                <Text style={styles.tcLink}>Privacy Policy.</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* OR divider */}
+          <View style={styles.orWrap}>
+            <View style={styles.orLine} />
+            <Text style={styles.orText}>OR</Text>
+            <View style={styles.orLine} />
+          </View>
+
+          {/* WhatsApp login */}
+          <TouchableOpacity
+            style={styles.whatsappBtn}
+            activeOpacity={0.8}
+            onPress={() => router.replace('/(tabs)/home')}
+          >
+            <Ionicons name="logo-whatsapp" size={24} color="#fff" />
+            <Text style={styles.whatsappBtnText}>LOGIN WITH WHATSAPP</Text>
+          </TouchableOpacity>
+
+          {/* Google & Facebook */}
+          <View style={styles.socialRow}>
+            <TouchableOpacity
+              style={styles.socialBtn}
+              activeOpacity={0.8}
+              onPress={() => router.replace('/(tabs)/home')}
+            >
+              <Ionicons name="logo-google" size={28} color="#4285F4" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.socialBtn, styles.facebookBtn]}
+              activeOpacity={0.8}
+              onPress={() => router.replace('/(tabs)/home')}
+            >
+              <Ionicons name="logo-facebook" size={28} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Sign up link */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>New to CaratLane?</Text>
+            <Link href="/(auth)/register" asChild>
+              <TouchableOpacity activeOpacity={0.7}>
+                <Text style={styles.createAccountLink}>Create Account</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
       </View>
     </AuthLayout>
@@ -84,58 +176,174 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: SPACING.base,
+  wrapper: {
+    flex: 1,
+  },
+  backBtn: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    marginBottom: SPACING.xs,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: SPACING.xxl,
+  },
+  iconWrap: {
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+  },
+  keyholeCircle: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 4,
+    fontSize: 24,
+    fontWeight: '700',
+    color: PURPLE_DARK,
+    marginBottom: SPACING.sm,
+    textAlign: 'center',
   },
-  subtitle: {
-    fontSize: 16,
-    color: '#5c5c5c',
-    marginBottom: 32,
+  desc: {
+    fontSize: 14,
+    color: TEXT_MUTED,
+    lineHeight: 22,
+    marginBottom: SPACING.xl,
+    textAlign: 'center',
   },
   input: {
     height: 48,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: BORDER_GRAY,
     borderRadius: 10,
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    paddingHorizontal: SPACING.base,
+    marginBottom: SPACING.base,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: TEXT_DARK,
   },
-  button: {
+  continueBtn: {
     height: 48,
-    backgroundColor: '#B8860B',
+    backgroundColor: BUTTON_GRAY,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginBottom: SPACING.lg,
   },
-  buttonDisabled: {
-    opacity: 0.7,
+  continueBtnDisabled: {
+    opacity: 0.6,
   },
-  buttonText: {
+  continueBtnText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  tcRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: SPACING.xl,
+    gap: SPACING.sm,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 2,
+    borderColor: BORDER_GRAY,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 2,
+  },
+  checkboxChecked: {
+    backgroundColor: PURPLE_DARK,
+    borderColor: PURPLE_DARK,
+  },
+  tcTextWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  tcText: {
+    fontSize: 12,
+    color: TEXT_MUTED,
+    lineHeight: 18,
+  },
+  tcLinkTouch: {
+    paddingVertical: 2,
+  },
+  tcLink: {
+    color: PURPLE_DARK,
     fontWeight: '600',
+  },
+  orWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+    gap: SPACING.sm,
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: BORDER_GRAY,
+  },
+  orText: {
+    fontSize: 13,
+    color: TEXT_MUTED,
+    fontWeight: '500',
+  },
+  whatsappBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 48,
+    backgroundColor: GREEN_WHATSAPP,
+    borderRadius: 10,
+    marginBottom: SPACING.base,
+    gap: SPACING.sm,
+  },
+  whatsappBtnText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  socialRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.lg,
+    marginBottom: SPACING.xxl,
+  },
+  socialBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: BORDER_GRAY,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  facebookBtn: {
+    backgroundColor: FACEBOOK_BLUE,
+    borderColor: FACEBOOK_BLUE,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 24,
+    alignItems: 'center',
+    gap: 6,
   },
   footerText: {
-    color: '#5c5c5c',
     fontSize: 14,
+    color: TEXT_MUTED,
   },
-  link: {
-    color: '#B8860B',
+  createAccountLink: {
     fontSize: 14,
     fontWeight: '600',
+    color: PURPLE_DARK,
   },
 });

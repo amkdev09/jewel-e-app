@@ -1,9 +1,30 @@
 /**
- * App color palette – jewelry ecommerce (CaratLane-style).
+ * App color palette – aligned with web design system where applicable.
  * Use via theme or directly for one-off styling.
  */
 const tintLight = '#B8860B'; // dark goldenrod – premium feel
 const tintDark = '#D4AF37'; // gold
+
+/** Web design system palette (--primary-color-a etc.) */
+export const DesignColors = {
+  primary: {
+    a: 'rgb(79, 50, 103)',
+    b: 'rgb(136, 99, 251)',
+    c: 'rgb(135, 118, 157)',
+    d: 'rgb(246, 243, 249)',
+  },
+  secondary: {
+    d: 'rgb(192, 172, 157)',
+    e: 'rgb(224, 213, 200)',
+    f: 'rgb(240, 230, 218)',
+    g: 'rgb(248, 242, 234)',
+    h: 'rgb(252, 248, 242)',
+    i: 'rgb(255, 255, 255)',
+  },
+  black: '#000',
+  white: '#fff',
+  pink: '#DE57E5',
+};
 
 export const Colors = {
   light: {

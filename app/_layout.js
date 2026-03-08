@@ -1,7 +1,21 @@
+import {
+  Inter_400Regular,
+  Inter_600SemiBold,
+} from '@expo-google-fonts/inter';
+import {
+  NotoSansDevanagari_400Regular,
+  NotoSansDevanagari_600SemiBold,
+} from '@expo-google-fonts/noto-sans-devanagari';
+import { useFonts } from '@expo-google-fonts/inter/useFonts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useCallback } from 'react';
+import { View } from 'react-native';
 import 'react-native-reanimated';
+
+SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,10 +36,29 @@ function RootLayoutNav() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    NotoSansDevanagari_400Regular,
+    NotoSansDevanagari_600SemiBold,
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded || fontError) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <RootLayoutNav />
-      <StatusBar style="auto" />
-    </QueryClientProvider>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <QueryClientProvider client={queryClient}>
+        <RootLayoutNav />
+        <StatusBar style="auto" />
+      </QueryClientProvider>
+    </View>
   );
 }

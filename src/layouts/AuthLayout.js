@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingHorizontal: 20,
+    paddingVertical: 0,
     justifyContent: 'center',
     minHeight: '100%',
   },

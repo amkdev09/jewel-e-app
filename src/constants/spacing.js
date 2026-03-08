@@ -1,16 +1,21 @@
 /**
- * Spacing scale for consistent layout (multiples of 4).
+ * Spacing scale – aligned with web app (--spacing: .25rem).
+ * Re-exported from design tokens for a single source of truth.
  */
+import { spacing as tokensSpacing } from '@/src/theme/tokens';
+
 export const SPACING = {
-  xxs: 2,
-  xs: 4,
-  sm: 8,
-  md: 12,
-  base: 16,
-  lg: 20,
-  xl: 24,
-  xxl: 32,
-  xxxl: 40,
+  ...tokensSpacing,
+  // Keep legacy keys if any code expects exact same object shape
+  xxs: tokensSpacing.xxs,
+  xs: tokensSpacing.xs,
+  sm: tokensSpacing.sm,
+  md: tokensSpacing.md,
+  base: tokensSpacing.base,
+  lg: tokensSpacing.lg,
+  xl: tokensSpacing.xl,
+  xxl: tokensSpacing.xxl,
+  xxxl: tokensSpacing.xxxl,
 };
 
 export default SPACING;
