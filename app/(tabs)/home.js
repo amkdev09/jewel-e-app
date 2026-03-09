@@ -2,8 +2,8 @@ import { AppText } from '@/components/AppText';
 import { SPACING } from '@/constants/theme';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
 import {
   Dimensions,
@@ -84,7 +84,10 @@ export default function HomeScreen() {
       <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
         <View style={styles.headerTop}>
           <View style={styles.logoWrap}>
-            <View style={styles.logoIcon} />
+
+            <TouchableOpacity onPress={() => router.push('/(tabs)/categories')}>
+              <View style={styles.logoIcon} />
+            </TouchableOpacity>
             <AppText variant="xl" weight="semiBold" style={styles.logoText}>Jewele</AppText>
           </View>
           <TouchableOpacity style={styles.locationWrap} activeOpacity={0.8}>
