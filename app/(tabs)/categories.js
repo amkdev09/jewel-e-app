@@ -1,4 +1,5 @@
-import { SPACING } from '@/src/constants/spacing';
+import { AppText } from '@/components/AppText';
+import { SPACING } from '@/constants/theme';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -8,7 +9,6 @@ import {
   Dimensions,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -75,14 +75,16 @@ export default function CategoriesScreen() {
             onPress={() => setActiveTab(tab)}
             activeOpacity={0.7}
           >
-            <Text
+            <AppText
+              variant="base"
+              weight={activeTab === tab ? 'semiBold' : 'regular'}
               style={[
                 styles.tabText,
                 activeTab === tab && styles.tabTextActive,
               ]}
             >
               {tab}
-            </Text>
+            </AppText>
             {activeTab === tab && <View style={styles.tabUnderline} />}
           </TouchableOpacity>
         ))}
@@ -94,7 +96,7 @@ export default function CategoriesScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Top Categories */}
-        <Text style={styles.sectionTitle}>Top Categories</Text>
+        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>Top Categories</AppText>
         <View style={styles.categoryGrid}>
           {TOP_CATEGORIES.map((cat) => (
             <TouchableOpacity
@@ -108,9 +110,9 @@ export default function CategoriesScreen() {
                   style={styles.categoryCardImage}
                 />
               </View>
-              <Text style={styles.categoryCardLabel} numberOfLines={2}>
+              <AppText variant="base" weight="regular" style={styles.categoryCardLabel} numberOfLines={2}>
                 {cat.label}
-              </Text>
+              </AppText>
               <Ionicons
                 name="chevron-forward"
                 size={18}
@@ -123,8 +125,8 @@ export default function CategoriesScreen() {
 
         {/* Friends | Silver */}
         <View style={styles.sectionTitleRow}>
-          <Text style={[styles.sectionTitle, styles.sectionTitleInRow]}>Friends </Text>
-          <Text style={[styles.sectionTitle, styles.sectionTitleBold]}>| Silver</Text>
+          <AppText variant="xl" weight="semiBold" style={[styles.sectionTitle, styles.sectionTitleInRow]}>Friends </AppText>
+          <AppText variant="xl" weight="semiBold" style={[styles.sectionTitle, styles.sectionTitleBold]}>| Silver</AppText>
         </View>
         <View style={styles.bannerWrap}>
           <View style={[styles.bannerCard, { width: BANNER_CARD_W }]}>
@@ -136,10 +138,10 @@ export default function CategoriesScreen() {
             />
             <View style={styles.bannerContent}>
               <View style={styles.bannerTextWrap}>
-                <Text style={styles.bannerTitle}>SHAYA</Text>
-                <Text style={styles.bannerSub}>DIAMONDS</Text>
-                <Text style={styles.bannerScript}>Natural Diamonds</Text>
-                <Text style={styles.bannerMeta}>in 925 Silver</Text>
+                <AppText variant="2xl" weight="semiBold" style={styles.bannerTitle}>SHAYA</AppText>
+                <AppText variant="xl" weight="semiBold" style={styles.bannerSub}>DIAMONDS</AppText>
+                <AppText variant="base" weight="regular" style={styles.bannerScript}>Natural Diamonds</AppText>
+                <AppText variant="sm" weight="regular" style={styles.bannerMeta}>in 925 Silver</AppText>
               </View>
               <View style={styles.bannerDecoration}>
                 <Image
@@ -156,7 +158,7 @@ export default function CategoriesScreen() {
         </View>
 
         {/* Most Browsed */}
-        <Text style={styles.sectionTitle}>Most Browsed</Text>
+        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>Most Browsed</AppText>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

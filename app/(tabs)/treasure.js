@@ -1,14 +1,15 @@
-import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { AppText } from '@/components/AppText';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 
 export default function TreasureScreen() {
   return (
     <ScreenLayout>
-      <Text style={styles.title}>Treasure Chest</Text>
-      <Text style={styles.subtitle}>
+      <AppText variant="2xl" weight="semiBold" style={styles.title}>Treasure Chest</AppText>
+      <AppText variant="lg" weight="regular" style={styles.subtitle}>
         Exclusive collections and limited editions.
-      </Text>
+      </AppText>
     </ScreenLayout>
   );
 }

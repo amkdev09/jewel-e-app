@@ -6,6 +6,7 @@ import {
   NotoSansDevanagari_400Regular,
   NotoSansDevanagari_600SemiBold,
 } from '@expo-google-fonts/noto-sans-devanagari';
+import { GreatVibes_400Regular } from '@expo-google-fonts/great-vibes';
 import { useFonts } from '@expo-google-fonts/inter/useFonts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
@@ -31,6 +32,9 @@ function RootLayoutNav() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="wishlist" options={{ headerShown: false }} />
+      <Stack.Screen name="bag" options={{ headerShown: false }} />
+      <Stack.Screen name="latest-designs" options={{ headerShown: false }} />
     </Stack>
   );
 }
@@ -41,6 +45,7 @@ export default function RootLayout() {
     Inter_600SemiBold,
     NotoSansDevanagari_400Regular,
     NotoSansDevanagari_600SemiBold,
+    GreatVibes_400Regular,
   });
 
   const onLayoutRootView = useCallback(async () => {

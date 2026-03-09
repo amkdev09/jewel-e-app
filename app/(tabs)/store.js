@@ -1,4 +1,5 @@
-import { SPACING } from '@/src/constants/spacing';
+import { AppText } from '@/components/AppText';
+import { SPACING } from '@/constants/theme';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,7 +9,6 @@ import React, { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -98,7 +98,7 @@ export default function StoreScreen() {
         >
           <Ionicons name="arrow-back" size={24} color={PURPLE_DARK} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>FIND A STORE</Text>
+        <AppText variant="lg" weight="semiBold" style={styles.headerTitle}>FIND A STORE</AppText>
         <View style={styles.headerRight} />
       </View>
 
@@ -112,23 +112,23 @@ export default function StoreScreen() {
           <View style={styles.storeIconWrap}>
             <Ionicons name="storefront-outline" size={48} color={ORANGE_ACCENT} />
           </View>
-          <Text style={styles.storesInPincode}>Stores in {pincode}</Text>
+          <AppText variant="xl" weight="semiBold" style={styles.storesInPincode}>Stores in {pincode}</AppText>
           <View style={styles.pincodeCard}>
             <Ionicons name="locate" size={22} color={PURPLE_DARK} />
-            <Text style={styles.pincodeValue}>{pincode}</Text>
+            <AppText variant="lg" weight="semiBold" style={styles.pincodeValue}>{pincode}</AppText>
             <TouchableOpacity activeOpacity={0.7} style={styles.changePincodeBtn}>
-              <Text style={styles.changePincodeText}>Change Pincode / City</Text>
+              <AppText variant="sm" weight="semiBold" style={styles.changePincodeText}>Change Pincode / City</AppText>
             </TouchableOpacity>
           </View>
-          <Text style={styles.pincodeDesc}>
+          <AppText variant="sm" weight="regular" style={styles.pincodeDesc}>
             We have {storeCount} stores in this locality, scroll down to view the stores and browse the designs available.
-          </Text>
+          </AppText>
         </View>
 
         {/* Store list header - lavender */}
         <View style={styles.listHeader}>
-          <Text style={styles.listHeaderText}>Showing {storeCount} Stores in </Text>
-          <Text style={styles.listHeaderPincode}>{pincode}</Text>
+          <AppText variant="base" weight="regular" style={styles.listHeaderText}>Showing {storeCount} Stores in </AppText>
+          <AppText variant="base" weight="semiBold" style={styles.listHeaderPincode}>{pincode}</AppText>
         </View>
 
         {/* Store cards */}
@@ -136,12 +136,12 @@ export default function StoreScreen() {
           <View key={store.id} style={styles.storeCard}>
             <View style={styles.storeCardTop}>
               <View style={styles.storeNameBlock}>
-                <Text style={styles.storeName}>{store.name}</Text>
+                <AppText variant="base" weight="semiBold" style={styles.storeName}>{store.name}</AppText>
                 <View style={styles.ratingRow}>
                   <Ionicons name="star" size={14} color="#eab308" />
-                  <Text style={styles.ratingText}>{store.rating}</Text>
+                  <AppText variant="sm" weight="regular" style={styles.ratingText}>{store.rating}</AppText>
                   <TouchableOpacity onPress={() => openGoogleReviews(store)} activeOpacity={0.7}>
-                    <Text style={styles.reviewsLink}>{store.reviewCount} Google Reviews</Text>
+                    <AppText variant="xs" weight="semiBold" style={styles.reviewsLink}>{store.reviewCount} Google Reviews</AppText>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -151,11 +151,11 @@ export default function StoreScreen() {
                 activeOpacity={0.7}
               >
                 <Ionicons name="paper-plane" size={16} color={PURPLE_DARK} />
-                <Text style={styles.navBtnText}>{store.distance}</Text>
+                <AppText variant="sm" weight="semiBold" style={styles.navBtnText}>{store.distance}</AppText>
               </TouchableOpacity>
             </View>
 
-            <Text style={styles.storeAddress}>{store.address}</Text>
+            <AppText variant="sm" weight="regular" style={styles.storeAddress}>{store.address}</AppText>
 
             <View style={styles.contactRow}>
               <TouchableOpacity
@@ -164,17 +164,17 @@ export default function StoreScreen() {
                 activeOpacity={0.7}
               >
                 <Ionicons name="call" size={18} color={PURPLE_DARK} />
-                <Text style={styles.phoneText}>{store.phone}</Text>
+                <AppText variant="sm" weight="regular" style={styles.phoneText}>{store.phone}</AppText>
               </TouchableOpacity>
               <View style={styles.contactDivider} />
               <View style={styles.contactItem}>
                 <Ionicons name="time-outline" size={18} color={TEXT_MUTED} />
-                <Text style={styles.hoursText}>{store.hours}</Text>
+                <AppText variant="sm" weight="regular" style={styles.hoursText}>{store.hours}</AppText>
               </View>
             </View>
 
             <TouchableOpacity style={styles.viewDetailsBtn} activeOpacity={0.7}>
-              <Text style={styles.viewDetailsText}>VIEW STORE DETAILS</Text>
+              <AppText variant="sm" weight="semiBold" style={styles.viewDetailsText}>VIEW STORE DETAILS</AppText>
             </TouchableOpacity>
 
             <View style={styles.actionRow}>
@@ -192,11 +192,11 @@ export default function StoreScreen() {
                   end={{ x: 1, y: 0 }}
                   style={styles.bookVisitBtn}
                 >
-                  <Text style={styles.bookVisitText}>BOOK A VISIT</Text>
+                  <AppText variant="sm" weight="semiBold" style={styles.bookVisitText}>BOOK A VISIT</AppText>
                 </LinearGradient>
               </TouchableOpacity>
               <TouchableOpacity style={styles.viewDesignsBtn} activeOpacity={0.7}>
-                <Text style={styles.viewDesignsText}>VIEW ALL DESIGNS</Text>
+                <AppText variant="sm" weight="semiBold" style={styles.viewDesignsText}>VIEW ALL DESIGNS</AppText>
               </TouchableOpacity>
             </View>
           </View>

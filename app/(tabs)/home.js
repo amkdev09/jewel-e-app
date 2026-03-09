@@ -1,13 +1,14 @@
-import { SPACING } from '@/src/constants/spacing';
+import { AppText } from '@/components/AppText';
+import { SPACING } from '@/constants/theme';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import React, { useMemo } from 'react';
 import {
   Dimensions,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -41,6 +42,7 @@ const SHOWCASE_ITEMS = [
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const categoryCells = useMemo(
     () =>
       CATEGORIES.map((cat) => (
@@ -48,6 +50,7 @@ export default function HomeScreen() {
           key={cat.id}
           style={styles.categoryWrap}
           activeOpacity={0.8}
+          onPress={() => router.push('/latest-designs')}
         >
           <View style={styles.categoryCircle}>
             <Image
@@ -55,12 +58,12 @@ export default function HomeScreen() {
               style={styles.categoryImage}
             />
           </View>
-          <Text style={styles.categoryLabel} numberOfLines={2}>
+          <AppText variant="sm" weight="regular" style={styles.categoryLabel} numberOfLines={2}>
             {cat.label}
-          </Text>
+          </AppText>
         </TouchableOpacity>
       )),
-    []
+    [router]
   );
 
   const showcaseCards = useMemo(
@@ -82,24 +85,30 @@ export default function HomeScreen() {
         <View style={styles.headerTop}>
           <View style={styles.logoWrap}>
             <View style={styles.logoIcon} />
-            <Text style={styles.logoText}>Jewele</Text>
+            <AppText variant="xl" weight="semiBold" style={styles.logoText}>Jewele</AppText>
           </View>
           <TouchableOpacity style={styles.locationWrap} activeOpacity={0.8}>
             <View>
-              <Text style={styles.locationLine1}>Ghumar Mandi</Text>
-              <Text style={styles.locationLine2}>Ludhiana 142027</Text>
+              <AppText variant="xs" weight="semiBold" style={styles.locationLine1}>Ghumar Mandi</AppText>
+              <AppText variant="xs" weight="regular" style={styles.locationLine2}>Ludhiana 142027</AppText>
             </View>
             <Ionicons name="chevron-down" size={18} color="#fff" />
           </TouchableOpacity>
           <View style={styles.headerRight}>
             <View style={styles.clubBadge}>
-              <Text style={styles.clubTextTop}>CLUB</Text>
-              <Text style={styles.clubTextBottom}>xClusive</Text>
+              <AppText variant="xs" weight="semiBold" style={styles.clubTextTop}>CLUB</AppText>
+              <AppText variant="xs" weight="regular" style={styles.clubTextBottom}>xClusive</AppText>
             </View>
-            <TouchableOpacity style={styles.headerIconBtn}>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => router.push('/wishlist')}
+            >
               <Ionicons name="heart-outline" size={22} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.headerIconBtn}>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => router.push('/bag')}
+            >
               <Ionicons name="bag-outline" size={22} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -107,7 +116,7 @@ export default function HomeScreen() {
         <View style={styles.searchRow}>
           <View style={styles.searchBox}>
             <Ionicons name="search" size={20} color="#9ca3af" />
-            <Text style={styles.searchPlaceholder}>{"Search 'Category'"}</Text>
+            <AppText variant="base" weight="regular" style={styles.searchPlaceholder}>{"Search 'Category'"}</AppText>
           </View>
         </View>
       </View>
@@ -123,8 +132,8 @@ export default function HomeScreen() {
         {/* Hero banner - dark teal with gold accent */}
         <View style={styles.hero}>
           <View style={styles.heroContent}>
-            <Text style={styles.heroTitle}>WOMEN</Text>
-            <Text style={styles.heroSub}>Discover fine jewelry</Text>
+            <AppText variant="2xl" weight="semiBold" style={styles.heroTitle}>WOMEN</AppText>
+            <AppText variant="base" weight="regular" style={styles.heroSub}>Discover fine jewelry</AppText>
           </View>
           <View style={styles.heroAccent} />
         </View>

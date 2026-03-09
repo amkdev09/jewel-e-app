@@ -1,5 +1,5 @@
-import { AppText } from '@/src/components/ui/AppText';
-import { SPACING } from '@/src/constants/spacing';
+import { AppText } from '@/components/AppText';
+import { SPACING } from '@/constants/theme';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,6 @@ import { useState } from 'react';
 import {
   Alert,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -99,7 +98,7 @@ export default function LoginScreen() {
             disabled={loading}
             activeOpacity={0.8}
           >
-            <Text style={styles.continueBtnText}>CONTINUE TO LOGIN</Text>
+            <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>CONTINUE TO LOGIN</AppText>
           </TouchableOpacity>
 
           {/* T&C checkbox row */}
@@ -112,15 +111,15 @@ export default function LoginScreen() {
               {agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
             </TouchableOpacity>
             <View style={styles.tcTextWrap}>
-              <Text style={styles.tcText}>
+              <AppText variant="xs" weight="regular" style={styles.tcText}>
                 By continuing you acknowledge that you are at least 18 years old and have read and agree to CaratLane's{' '}
-              </Text>
+              </AppText>
               <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
-                <Text style={styles.tcLink}>T&C</Text>
+                <AppText variant="xs" weight="semiBold" style={styles.tcLink}>T&C</AppText>
               </TouchableOpacity>
-              <Text style={styles.tcText}> </Text>
+              <AppText variant="xs" weight="regular" style={styles.tcText}> </AppText>
               <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
-                <Text style={styles.tcLink}>Privacy Policy.</Text>
+                <AppText variant="xs" weight="semiBold" style={styles.tcLink}>Privacy Policy.</AppText>
               </TouchableOpacity>
             </View>
           </View>
@@ -128,7 +127,7 @@ export default function LoginScreen() {
           {/* OR divider */}
           <View style={styles.orWrap}>
             <View style={styles.orLine} />
-            <Text style={styles.orText}>OR</Text>
+            <AppText variant="sm" weight="medium" style={styles.orText}>OR</AppText>
             <View style={styles.orLine} />
           </View>
 
@@ -139,7 +138,7 @@ export default function LoginScreen() {
             onPress={() => router.replace('/(tabs)/home')}
           >
             <Ionicons name="logo-whatsapp" size={24} color="#fff" />
-            <Text style={styles.whatsappBtnText}>LOGIN WITH WHATSAPP</Text>
+            <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>LOGIN WITH WHATSAPP</AppText>
           </TouchableOpacity>
 
           {/* Google & Facebook */}
@@ -162,10 +161,10 @@ export default function LoginScreen() {
 
           {/* Sign up link */}
           <View style={styles.footer}>
-            <Text style={styles.footerText}>New to CaratLane?</Text>
+            <AppText variant="base" weight="regular" style={styles.footerText}>New to CaratLane?</AppText>
             <Link href="/(auth)/register" asChild>
               <TouchableOpacity activeOpacity={0.7}>
-                <Text style={styles.createAccountLink}>Create Account</Text>
+                <AppText variant="base" weight="semiBold" style={styles.createAccountLink}>Create Account</AppText>
               </TouchableOpacity>
             </Link>
           </View>

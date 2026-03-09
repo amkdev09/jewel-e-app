@@ -1,16 +1,16 @@
+import { AppText } from '@/components/AppText';
+import { SPACING } from '@/constants/theme';
+import { AuthLayout } from '@/src/layouts/AuthLayout';
+import { useAuthStore } from '@/src/store/auth.store';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
   Alert,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
-import { AuthLayout } from '@/src/layouts/AuthLayout';
-import { useAuthStore } from '@/src/store/auth.store';
-import { SPACING } from '@/src/constants/spacing';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -38,8 +38,8 @@ export default function RegisterScreen() {
   return (
     <AuthLayout>
       <View style={styles.container}>
-        <Text style={styles.title}>Create account</Text>
-        <Text style={styles.subtitle}>Join us for the best in jewelry</Text>
+        <AppText variant="2xl" weight="semiBold" style={styles.title}>Create account</AppText>
+        <AppText variant="lg" weight="regular" style={styles.subtitle}>Join us for the best in jewelry</AppText>
 
         <TextInput
           style={styles.input}
@@ -74,16 +74,16 @@ export default function RegisterScreen() {
           onPress={handleRegister}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>
+          <AppText variant="base" weight="semiBold" style={styles.buttonText}>
             {loading ? 'Creating account...' : 'Register'}
-          </Text>
+          </AppText>
         </TouchableOpacity>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
+          <AppText variant="base" weight="regular" style={styles.footerText}>Already have an account? </AppText>
           <Link href="/(auth)/login" asChild>
             <TouchableOpacity>
-              <Text style={styles.link}>Sign in</Text>
+              <AppText variant="base" weight="semiBold" style={styles.link}>Sign in</AppText>
             </TouchableOpacity>
           </Link>
         </View>

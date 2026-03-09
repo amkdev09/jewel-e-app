@@ -12,6 +12,7 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md}\""
   },
   "dependencies": {
+    "@expo-google-fonts/great-vibes": "^0.4.1",
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo-google-fonts/noto-sans-devanagari": "^0.4.1",
     "@expo/vector-icons": "^15.0.3",

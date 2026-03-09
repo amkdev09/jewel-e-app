@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Image } from 'expo-image';
+import { AppText } from '@/components/AppText';
+import { Colors, SPACING } from '@/constants/theme';
 import { formatPrice } from '@/src/utils/formatPrice';
-import { SPACING } from '@/src/constants/spacing';
-import { Colors } from '@/src/constants/colors';
+import { Image } from 'expo-image';
+import React, { memo } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
 function ProductCardComponent({
   product,
@@ -28,7 +28,7 @@ function ProductCardComponent({
         />
         {isNew && (
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>New</Text>
+            <AppText variant="xs" weight="semiBold" style={styles.badgeText}>New</AppText>
           </View>
         )}
         <TouchableOpacity
@@ -39,17 +39,17 @@ function ProductCardComponent({
           }}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Text style={styles.wishlistIcon}>{isInWishlist ? '❤️' : '🤍'}</Text>
+          <AppText variant="base" weight="regular" style={styles.wishlistIcon}>{isInWishlist ? '❤️' : '🤍'}</AppText>
         </TouchableOpacity>
       </View>
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={2}>
+        <AppText variant="base" weight="medium" style={styles.name} numberOfLines={2}>
           {name}
-        </Text>
+        </AppText>
         {rating != null && (
-          <Text style={styles.rating}>★ {rating}</Text>
+          <AppText variant="sm" weight="regular" style={styles.rating}>★ {rating}</AppText>
         )}
-        <Text style={styles.price}>{formatPrice(price)}</Text>
+        <AppText variant="lg" weight="semiBold" style={styles.price}>{formatPrice(price)}</AppText>
       </View>
     </TouchableOpacity>
   );

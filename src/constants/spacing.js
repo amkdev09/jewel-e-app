@@ -1,21 +1,6 @@
 /**
- * Spacing scale – aligned with web app (--spacing: .25rem).
- * Re-exported from design tokens for a single source of truth.
+ * Spacing – re-exported from single theme (constants/theme.js).
+ * Prefer: import { SPACING } from '@/constants/theme';
  */
-import { spacing as tokensSpacing } from '@/src/theme/tokens';
-
-export const SPACING = {
-  ...tokensSpacing,
-  // Keep legacy keys if any code expects exact same object shape
-  xxs: tokensSpacing.xxs,
-  xs: tokensSpacing.xs,
-  sm: tokensSpacing.sm,
-  md: tokensSpacing.md,
-  base: tokensSpacing.base,
-  lg: tokensSpacing.lg,
-  xl: tokensSpacing.xl,
-  xxl: tokensSpacing.xxl,
-  xxxl: tokensSpacing.xxxl,
-};
-
-export default SPACING;
+export { SPACING, spacing } from '@/constants/theme';
+export { SPACING as default } from '@/constants/theme';

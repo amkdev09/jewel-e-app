@@ -1,6 +1,7 @@
+import { AppText } from '@/components/AppText';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 const TAB_PURPLE = '#7c3aed';
 const TAB_ICONS = {
@@ -14,7 +15,7 @@ const TAB_ICONS = {
 function YouTabBadge() {
   return (
     <View style={badgeStyles.badge}>
-      <Text style={badgeStyles.text}>₹500</Text>
+      <AppText variant="xs" weight="semiBold" style={badgeStyles.text}>₹500</AppText>
     </View>
   );
 }
