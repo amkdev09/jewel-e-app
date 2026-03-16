@@ -7,12 +7,9 @@
  * <AppText variant="lg" weight="semiBold">Title</AppText>
  * <AppText variant="base" weight="regular">Body</AppText>
  */
-import { fontFamily, text } from '@/constants/theme';
+import { theme } from '@/constants/index';
 import React from 'react';
 import { Text } from 'react-native';
-
-const VARIANTS = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'];
-const WEIGHTS = ['regular', 'semiBold'];
 
 export function AppText({
   variant = 'base',
@@ -21,15 +18,13 @@ export function AppText({
   children,
   ...rest
 }) {
-  const fontKey = weight === 'semiBold' ? 'semiBold' : 'regular';
-  const textStyle = text[variant] ?? text.base;
 
   return (
     <Text
       style={[
         {
-          fontFamily: fontFamily[fontKey],
-          ...textStyle,
+          fontFamily: theme?.typography?.fontFamily?.[weight],
+          fontSize: theme?.typography?.fontSize?.[variant],
         },
         style,
       ]}

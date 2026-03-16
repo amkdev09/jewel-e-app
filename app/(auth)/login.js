@@ -1,5 +1,5 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { theme } from '@/constants/index';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
 import { Ionicons } from '@expo/vector-icons';
@@ -75,8 +75,7 @@ export default function LoginScreen() {
               <Ionicons name="key" size={48} color="#fff" />
             </LinearGradient>
           </View>
-
-          <AppText variant="lg" weight="semiBold" style={styles.title}>Welcome back!</AppText>
+          <AppText variant="base" weight="semiBold" style={styles.title}>Welcome back!</AppText>
           <AppText variant="base" weight="regular" style={styles.desc}>
             Login to unlock best prices and become an insider for our exclusive launches offers. Complete your profile and get ₹500 worth of xCLusive Points.
           </AppText>
@@ -182,15 +181,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     justifyContent: 'center',
-    marginBottom: SPACING.xs,
+    marginBottom: theme?.spacing?.xs,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: SPACING.xxl,
+    paddingBottom: theme?.spacing?.xxl,
   },
   iconWrap: {
     alignItems: 'center',
-    marginBottom: SPACING.lg,
+    marginBottom: theme?.spacing?.lg,
   },
   keyholeCircle: {
     width: 88,
@@ -200,17 +199,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
     color: PURPLE_DARK,
-    marginBottom: SPACING.sm,
+    marginBottom: theme?.spacing?.sm,
     textAlign: 'center',
   },
   desc: {
     fontSize: 14,
     color: TEXT_MUTED,
     lineHeight: 22,
-    marginBottom: SPACING.xl,
+    marginBottom: theme?.spacing?.xl,
     textAlign: 'center',
   },
   input: {
@@ -218,8 +215,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BORDER_GRAY,
     borderRadius: 10,
-    paddingHorizontal: SPACING.base,
-    marginBottom: SPACING.base,
+    paddingHorizontal: theme?.spacing?.base,
+    marginBottom: theme?.spacing?.base,
     fontSize: 16,
     color: TEXT_DARK,
   },
@@ -229,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: SPACING.lg,
+    marginBottom: theme?.spacing?.lg,
   },
   continueBtnDisabled: {
     opacity: 0.6,
@@ -243,8 +240,8 @@ const styles = StyleSheet.create({
   tcRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: SPACING.xl,
-    gap: SPACING.sm,
+    marginBottom: theme?.spacing?.xl,
+    gap: theme?.spacing?.sm,
   },
   checkbox: {
     width: 22,
@@ -281,8 +278,8 @@ const styles = StyleSheet.create({
   orWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: SPACING.lg,
-    gap: SPACING.sm,
+    marginBottom: theme?.spacing?.lg,
+    gap: theme?.spacing?.sm,
   },
   orLine: {
     flex: 1,
@@ -301,8 +298,8 @@ const styles = StyleSheet.create({
     height: 48,
     backgroundColor: GREEN_WHATSAPP,
     borderRadius: 10,
-    marginBottom: SPACING.base,
-    gap: SPACING.sm,
+    marginBottom: theme?.spacing?.base,
+    gap: theme?.spacing?.sm,
   },
   whatsappBtnText: {
     color: '#fff',
@@ -313,8 +310,8 @@ const styles = StyleSheet.create({
   socialRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: SPACING.lg,
-    marginBottom: SPACING.xxl,
+    gap: theme?.spacing?.lg,
+    marginBottom: theme?.spacing?.xxl,
   },
   socialBtn: {
     width: 56,

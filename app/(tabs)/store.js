@@ -1,10 +1,10 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
   ScrollView,

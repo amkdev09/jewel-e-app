@@ -1,4 +1,4 @@
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

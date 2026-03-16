@@ -1,7 +1,7 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
@@ -84,19 +84,19 @@ export default function HomeScreen() {
       <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
         <View style={styles.headerTop}>
           <View style={styles.logoWrap}>
-
             <TouchableOpacity onPress={() => router.push('/(tabs)/categories')}>
               <View style={styles.logoIcon} />
             </TouchableOpacity>
-            <AppText variant="xl" weight="semiBold" style={styles.logoText}>Jewele</AppText>
+            <TouchableOpacity style={styles.locationWrap} activeOpacity={0.8}>
+              <View>
+                <AppText variant="xs" weight="regular" style={styles.locationLine1}>Ghumar Mandi</AppText>
+                <View style={styles.locationLine2Wrap}>
+                  <AppText variant="xs" weight="regular" style={styles.locationLine2}>Ludhiana 142027 </AppText>
+                  <Ionicons name="chevron-down" size={18} color="#fff" />
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.locationWrap} activeOpacity={0.8}>
-            <View>
-              <AppText variant="xs" weight="semiBold" style={styles.locationLine1}>Ghumar Mandi</AppText>
-              <AppText variant="xs" weight="regular" style={styles.locationLine2}>Ludhiana 142027</AppText>
-            </View>
-            <Ionicons name="chevron-down" size={18} color="#fff" />
-          </TouchableOpacity>
           <View style={styles.headerRight}>
             <View style={styles.clubBadge}>
               <AppText variant="xs" weight="semiBold" style={styles.clubTextTop}>CLUB</AppText>
@@ -106,13 +106,13 @@ export default function HomeScreen() {
               style={styles.headerIconBtn}
               onPress={() => router.push('/wishlist')}
             >
-              <Ionicons name="heart-outline" size={22} color="#fff" />
+              <Ionicons name="heart-outline" size={20} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerIconBtn}
               onPress={() => router.push('/bag')}
             >
-              <Ionicons name="bag-outline" size={22} color="#fff" />
+              <SimpleLineIcons name="bag" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
@@ -168,13 +168,11 @@ const styles = StyleSheet.create({
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 1 },
   header: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     backgroundColor: HEADER_DARK,
     paddingHorizontal: 4,
     paddingTop: SPACING.sm + 4,
     paddingBottom: 1,
+    paddingHorizontal: H_PAD,
   },
   headerTop: {
     flexDirection: 'row',
@@ -205,12 +203,14 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   locationLine1: {
-    fontSize: 13,
-    fontWeight: '600',
     color: '#fff',
   },
+  locationLine2Wrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
   locationLine2: {
-    fontSize: 11,
     color: 'rgba(255,255,255,0.8)',
   },
   headerRight: {
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: H_PAD,
     paddingVertical: SPACING.sm,
   },
   searchBox: {

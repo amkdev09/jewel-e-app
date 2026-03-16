@@ -1,9 +1,9 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { theme } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import {
   Dimensions,
@@ -27,7 +27,7 @@ const CARD_PRICE = '#6A1B9A';
 const CARD_ORIGINAL = '#9E9E9E';
 const CARD_DESC = '#424242';
 
-const H_PAD = SPACING.base;
+const H_PAD = theme?.spacing?.base;
 const CARD_W = (width - H_PAD * 2 - 12) * 0.48;
 const CARD_MARGIN = 8;
 
@@ -99,7 +99,7 @@ export default function WishlistScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
+      <View style={[styles.header, { paddingTop: insets.top + theme?.spacing?.sm }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn} hitSlop={12}>
           <Ionicons name="chevron-back" size={24} color={HEADER_ICON} />
         </TouchableOpacity>
@@ -163,15 +163,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: HEADER_BG,
     paddingHorizontal: H_PAD,
-    paddingBottom: SPACING.sm,
+    paddingBottom: theme?.spacing?.sm,
   },
   headerBtn: {
-    padding: SPACING.xs,
+    padding: theme?.spacing?.xs,
     minWidth: 40,
     alignItems: 'center',
   },
   headerTitle: {
-    fontSize: 18,
     fontWeight: '600',
     color: HEADER_ICON,
   },
@@ -180,23 +179,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: BANNER_BG,
-    paddingVertical: SPACING.sm,
+    paddingVertical: theme?.spacing?.sm,
     paddingHorizontal: H_PAD,
     gap: 8,
   },
   bannerText: {
-    fontSize: 13,
     color: BANNER_TEXT,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: SPACING.xxl,
+    paddingBottom: theme?.spacing?.xxl,
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: SPACING.xxl,
+    paddingVertical: theme?.spacing?.xxl,
     paddingHorizontal: H_PAD,
   },
   emptyCircle: {
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    marginBottom: SPACING.lg,
+    marginBottom: theme?.spacing?.lg,
   },
   emptyLines: {
     position: 'absolute',
@@ -226,14 +224,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   emptyHeading: {
-    fontSize: 20,
     fontWeight: '600',
     color: EMPTY_HEADING,
-    marginBottom: SPACING.sm,
+    marginBottom: theme?.spacing?.sm,
     textAlign: 'center',
   },
   emptyDesc: {
-    fontSize: 14,
     lineHeight: 21,
     color: EMPTY_DESC,
     textAlign: 'center',
@@ -241,12 +237,12 @@ const styles = StyleSheet.create({
   },
   productsSection: {
     paddingHorizontal: 0,
-    marginTop: SPACING.sm,
+    marginTop: theme?.spacing?.sm,
   },
   productsScroll: {
     paddingHorizontal: H_PAD,
     gap: CARD_MARGIN,
-    paddingVertical: SPACING.sm,
+    paddingVertical: theme?.spacing?.sm,
   },
   productCard: {
     backgroundColor: '#fff',
@@ -274,7 +270,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   cardInfo: {
-    padding: SPACING.sm,
+    padding: theme?.spacing?.sm,
   },
   cardPriceRow: {
     flexDirection: 'row',
@@ -283,17 +279,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardPrice: {
-    fontSize: 16,
     fontWeight: '600',
     color: CARD_PRICE,
   },
   cardOriginal: {
-    fontSize: 14,
     color: CARD_ORIGINAL,
     textDecorationLine: 'line-through',
   },
   cardName: {
-    fontSize: 13,
     color: CARD_DESC,
     lineHeight: 18,
   },

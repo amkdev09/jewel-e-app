@@ -1,15 +1,15 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-  View,
+  Alert,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
-  Alert,
+  View,
 } from 'react-native';
 
 export default function RegisterScreen() {

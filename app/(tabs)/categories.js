@@ -1,7 +1,7 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
@@ -58,10 +58,11 @@ export default function CategoriesScreen() {
         </View>
         <View style={styles.headerRight}>
           <TouchableOpacity style={styles.headerIconBtn} activeOpacity={0.7}>
-            <Ionicons name="heart-outline" size={24} color={TEXT_DARK} />
+            <Ionicons name="heart-outline" size={20} color={TEXT_DARK} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIconBtn} activeOpacity={0.7}>
-            <Ionicons name="bag-outline" size={24} color={TEXT_DARK} />
+            {/* <Ionicons name="bag-outline" size={24} color={TEXT_DARK} /> */}
+            <SimpleLineIcons name="bag" size={18} color={TEXT_DARK} />
           </TouchableOpacity>
         </View>
       </View>

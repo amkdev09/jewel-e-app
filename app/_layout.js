@@ -1,13 +1,13 @@
+import { GreatVibes_400Regular } from '@expo-google-fonts/great-vibes';
 import {
   Inter_400Regular,
   Inter_600SemiBold,
 } from '@expo-google-fonts/inter';
+import { useFonts } from '@expo-google-fonts/inter/useFonts';
 import {
   NotoSansDevanagari_400Regular,
   NotoSansDevanagari_600SemiBold,
 } from '@expo-google-fonts/noto-sans-devanagari';
-import { GreatVibes_400Regular } from '@expo-google-fonts/great-vibes';
-import { useFonts } from '@expo-google-fonts/inter/useFonts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';

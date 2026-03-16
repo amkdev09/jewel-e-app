@@ -3,7 +3,7 @@
  * Shown when bag icon on home is tapped.
  */
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { theme } from '@/constants/index';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const H_PAD = SPACING.base;
+const H_PAD = theme?.spacing?.base;
 
 // Design colors from spec
 const PRIMARY_PURPLE = '#6A1B9A';
@@ -67,7 +67,7 @@ export default function BagScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
+      <View style={[styles.header, { paddingTop: insets.top + theme?.spacing?.sm }]}>
         <TouchableOpacity
           onPress={() => router.back()}
           style={styles.headerBtn}
@@ -135,7 +135,7 @@ export default function BagScreen() {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + SPACING.xxl }]}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + theme?.spacing?.xxl }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Empty state */}
@@ -212,27 +212,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: SCREEN_BG,
     paddingHorizontal: H_PAD,
-    paddingBottom: SPACING.md,
+    paddingBottom: theme?.spacing?.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(0,0,0,0.08)',
   },
   headerBtn: {
-    padding: SPACING.xs,
+    padding: theme?.spacing?.xs,
     minWidth: 40,
     alignItems: 'center',
   },
   segmentedControl: {
     flexDirection: 'row',
     flex: 1,
-    marginHorizontal: SPACING.lg,
+    marginHorizontal: theme?.spacing?.lg,
     backgroundColor: LIGHTER_PURPLE,
     borderRadius: 10,
     overflow: 'hidden',
   },
   segment: {
     flex: 1,
-    paddingVertical: SPACING.sm,
-    paddingHorizontal: SPACING.sm,
+    paddingVertical: theme?.spacing?.sm,
+    paddingHorizontal: theme?.spacing?.sm,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -249,11 +249,9 @@ const styles = StyleSheet.create({
   },
   segmentText: {
     color: '#fff',
-    fontSize: 12,
   },
   segmentTextUnselected: {
     color: PRIMARY_PURPLE,
-    fontSize: 12,
   },
   segmentTextSelected: {
     color: '#fff',
@@ -263,13 +261,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: BANNER_BG,
-    paddingVertical: SPACING.sm,
+    paddingVertical: theme?.spacing?.sm,
     paddingHorizontal: H_PAD,
     gap: 8,
   },
   bannerText: {
     color: BANNER_TEXT,
-    fontSize: 13,
   },
   scroll: {
     flex: 1,
@@ -280,21 +277,20 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     alignItems: 'center',
-    paddingTop: SPACING.xxl,
+    paddingTop: theme?.spacing?.xxl,
   },
   emptyTitle: {
     color: DARK_TEXT,
-    fontSize: 22,
-    marginBottom: SPACING.sm,
+    marginBottom: theme?.spacing?.sm,
     textAlign: 'center',
   },
   emptySubtitle: {
     color: SECONDARY_TEXT,
-    marginBottom: SPACING.xl,
+    marginBottom: theme?.spacing?.xl,
     textAlign: 'center',
   },
   illustrationSpacer: {
-    height: SPACING.xl,
+    height: theme?.spacing?.xl,
   },
   illustrationWrap: {
     width: 180,
@@ -375,13 +371,13 @@ const styles = StyleSheet.create({
   },
   assuranceSection: {
     alignItems: 'center',
-    paddingVertical: SPACING.xxl,
-    paddingHorizontal: SPACING.base,
+    paddingVertical: theme?.spacing?.xxl,
+    paddingHorizontal: theme?.spacing?.base,
   },
   assuranceTitle: {
     color: DARK_TEXT,
     letterSpacing: 1,
-    marginBottom: SPACING.lg,
+    marginBottom: theme?.spacing?.lg,
     textAlign: 'center',
   },
   assuranceRow: {
@@ -395,7 +391,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   assuranceIconWrap: {
-    marginBottom: SPACING.sm,
+    marginBottom: theme?.spacing?.sm,
     position: 'relative',
   },
   assuranceBadge: {
@@ -411,7 +407,6 @@ const styles = StyleSheet.create({
   },
   assuranceBadgeText: {
     color: '#fff',
-    fontSize: 9,
   },
   assuranceLabel: {
     color: PRIMARY_PURPLE,
@@ -420,15 +415,14 @@ const styles = StyleSheet.create({
   },
   ctaBtn: {
     backgroundColor: PRIMARY_PURPLE,
-    paddingVertical: SPACING.base,
+    paddingVertical: theme?.spacing?.base,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: SPACING.xl,
+    marginBottom: theme?.spacing?.xl,
   },
   ctaBtnText: {
     color: '#fff',
     letterSpacing: 1,
-    fontSize: 15,
   },
 });

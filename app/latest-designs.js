@@ -1,5 +1,5 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { theme } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -16,8 +16,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
-const H_PAD = SPACING.base;
-const CARD_GAP = 10;
+const H_PAD = theme?.spacing?.base;
+const CARD_GAP = theme?.spacing?.xs;
 const CARD_WIDTH = (width - H_PAD * 2 - CARD_GAP) / 2;
 
 // Design tokens from reference
@@ -140,7 +140,7 @@ export default function LatestDesignsScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
+      <View style={[styles.header, { paddingTop: insets.top + theme?.spacing?.sm }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn} hitSlop={12}>
           <Ionicons name="arrow-back" size={24} color={TEXT_DARK} />
         </TouchableOpacity>
@@ -221,7 +221,7 @@ export default function LatestDesignsScreen() {
       </View>
 
       {/* Bottom bar */}
-      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + SPACING.sm }]}>
+      <View style={[styles.bottomBar, { paddingBottom: insets.bottom + theme?.spacing?.sm }]}>
         <TouchableOpacity style={styles.bottomItem}>
           <Ionicons name="grid-outline" size={20} color="#fff" />
           <AppText variant="sm" weight="semiBold" style={styles.bottomText}>
@@ -262,16 +262,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     paddingHorizontal: H_PAD,
-    paddingBottom: SPACING.sm,
+    paddingBottom: theme?.spacing?.sm,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.06)',
   },
   headerBtn: {
-    padding: SPACING.xs,
+    padding: theme?.spacing?.xs,
   },
   headerCenter: {
     flex: 1,
-    marginLeft: SPACING.sm,
+    marginLeft: theme?.spacing?.sm,
   },
   headerSub: {
     fontSize: 11,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   headerIconBtn: {
-    padding: SPACING.xs,
+    padding: theme?.spacing?.xs,
   },
   tabsScroll: {
     flexGrow: 0,
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     backgroundColor: DARK_PURPLE,
-    paddingVertical: SPACING.xl,
+    paddingVertical: theme?.spacing?.xl,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
   },
   gridContent: {
     paddingHorizontal: H_PAD,
-    paddingVertical: SPACING.base,
+    paddingVertical: theme?.spacing?.base,
     paddingBottom: 100,
   },
   gridRow: {
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     color: TEXT_DARK,
   },
   cardContent: {
-    padding: SPACING.sm,
+    padding: theme?.spacing?.sm,
   },
   price: {
     fontSize: 15,
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
   },
   cardActions: {
     flexDirection: 'row',
-    marginTop: SPACING.sm,
+    marginTop: theme?.spacing?.sm,
     gap: 8,
   },
   tryAtHomeBtn: {
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     backgroundColor: DARK_PURPLE,
-    paddingTop: SPACING.sm,
+    paddingTop: theme?.spacing?.sm,
   },
   bottomItem: {
     flex: 1,

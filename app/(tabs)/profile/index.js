@@ -1,5 +1,5 @@
 import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants/theme';
+import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { useAuthStore } from '@/src/store/auth.store';
 import { Ionicons } from '@expo/vector-icons';
@@ -52,12 +52,14 @@ const MENU_ITEMS = [
     title: 'Scan at Store',
     subtitle: 'To discover more about jewellery',
     icon: 'barcode-outline',
+    route: '/scan',
   },
   {
     id: 'wishlist',
     title: 'Wishlist',
     subtitle: 'Your most loved jewellery',
     icon: 'heart-outline',
+    route: '/wishlist',
   },
   {
     id: 'egold',
@@ -65,12 +67,14 @@ const MENU_ITEMS = [
     subtitle: 'Now you can invest worry free & redeem anytime',
     icon: null,
     isEGold: true,
+    route: '/profile/EGold',
   },
   {
     id: 'addPaymentMethod',
     title: 'Add Bank/UPI Details',
     subtitle: 'Your preferred refund payment method',
     icon: 'cash-outline',
+    route: '/profile/add-payment-method',
   },
   {
     id: 'payments',
@@ -83,6 +87,7 @@ const MENU_ITEMS = [
     title: 'Scan History',
     subtitle: 'See the products you liked at store',
     icon: 'barcode-outline',
+    route: '/scan',
   },
 ];
 
@@ -197,17 +202,14 @@ export default function ProfileScreen() {
         {/* List items - Scan at Store, Wishlist, eGold */}
         <View style={styles.listSection}>
           {MENU_ITEMS.map((item) => (
-  <TouchableOpacity
-    key={item.id}
-    style={styles.listItem}
-    activeOpacity={0.7}
-    onPress={() => {
-      if (item.id === 'egold') router.push('/profile/EGold');
-      else if (item.id === 'addPaymentMethod') router.push('/profile/add-payment-method');
-      else if (item.id === 'scan') router.push('/scan');
-      // add more routes as needed
-    }}
-  >
+            <TouchableOpacity
+              key={item.id}
+              style={styles.listItem}
+              activeOpacity={0.7}
+              onPress={() => {
+                if (item.route) router.push(item.route);
+              }}
+            >
               <View style={styles.listItemIconWrap}>
                 {item.isEGold ? (
                   <View style={styles.egoldIcon}>

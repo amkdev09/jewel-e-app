@@ -1,52 +1,6 @@
-/**
- * Single source of truth for app theme and design tokens.
- * Use this file for colors, spacing, typography (font family & sizes), and radii.
- * Import: import { Colors, SPACING, fontFamily, text } from '@/constants/theme';
- */
-
 import { Platform } from 'react-native';
 
-// ─── Colors (light/dark mode) ─────────────────────────────────────────────
-const tintLight = '#B8860B';
-const tintDark = '#D4AF37';
-
-export const Colors = {
-  light: {
-    text: '#1a1a1a',
-    textSecondary: '#5c5c5c',
-    background: '#ffffff',
-    backgroundSecondary: '#f8f8f8',
-    tint: tintLight,
-    icon: '#5c5c5c',
-    tabIconDefault: '#9ca3af',
-    tabIconSelected: tintLight,
-    border: '#e5e7eb',
-    primary: '#B8860B',
-    primaryDark: '#8B6914',
-    success: '#059669',
-    error: '#dc2626',
-    warning: '#d97706',
-  },
-  dark: {
-    text: '#f5f5f5',
-    textSecondary: '#a3a3a3',
-    background: '#0f0f0f',
-    backgroundSecondary: '#1a1a1a',
-    tint: tintDark,
-    icon: '#a3a3a3',
-    tabIconDefault: '#6b7280',
-    tabIconSelected: tintDark,
-    border: '#2d2d2d',
-    primary: '#D4AF37',
-    primaryDark: '#B8860B',
-    success: '#10b981',
-    error: '#ef4444',
-    warning: '#f59e0b',
-  },
-};
-
-/** Design system palette (primary, secondary, etc.) */
-export const designColors = {
+export const appColors = {
   primary: {
     a: 'rgb(79, 50, 103)',
     b: 'rgb(136, 99, 251)',
@@ -66,7 +20,6 @@ export const designColors = {
   pink: '#DE57E5',
 };
 
-// ─── Spacing (base 4pt) ───────────────────────────────────────────────────
 const BASE_SPACING = 4;
 
 export const spacing = {
@@ -82,10 +35,6 @@ export const spacing = {
   xxxl: BASE_SPACING * 10,
 };
 
-/** Alias for backward compatibility */
-export const SPACING = spacing;
-
-// ─── Typography (font family & text scale) ─────────────────────────────────
 export const fontFamily = {
   regular: 'Inter_400Regular',
   semiBold: 'Inter_600SemiBold',
@@ -100,19 +49,28 @@ export const fontWeight = {
   bold: '700',
 };
 
-/** Type scale – use with AppText variant (xs, sm, base, lg, xl, 2xl, 3xl, 4xl) */
-export const text = {
-  xs: { fontSize: 10, lineHeight: Math.round(10 * 1.33) },
-  sm: { fontSize: 12, lineHeight: Math.round(12 * 1.43) },
-  base: { fontSize: 14, lineHeight: Math.round(14 * 1.5) },
-  lg: { fontSize: 16, lineHeight: Math.round(16 * 1.56) },
-  xl: { fontSize: 20, lineHeight: 28 },
-  '2xl': { fontSize: 24, lineHeight: 32 },
-  '3xl': { fontSize: 30, lineHeight: 36 },
-  '4xl': { fontSize: 36, lineHeight: 40 },
+export const fontSize = {
+  xs: 10,
+  sm: 12,
+  base: 14,
+  lg: 16,
+  xl: 18,
+  "2xl": 24,
+  "3xl": 28,
+  "4xl": 36,
 };
 
-// ─── Radius ───────────────────────────────────────────────────────────────
+export const iconSizes = {
+  xs: 12,
+  sm: 16,
+  base: 18,
+  lg: 20,
+  xl: 22,
+  '2xl': 26,
+  '3xl': 30,
+  '4xl': 34,
+};
+
 export const radius = {
   sm: 4,
   md: 6,
@@ -123,7 +81,6 @@ export const radius = {
   '4xl': 32,
 };
 
-// ─── Optional (container, tracking, easing) ────────────────────────────────
 export const container = {
   '3xs': 256,
   xs: 320,

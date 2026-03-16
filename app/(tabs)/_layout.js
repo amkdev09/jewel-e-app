@@ -1,44 +1,44 @@
 import { AppText } from '@/components/AppText';
-import { Ionicons } from '@expo/vector-icons';
+import { APP_COLORS, FONT_FAMILY, FONT_SIZE } from '@/constants/index';
+import { FontAwesome6, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-const TAB_PURPLE = '#7c3aed';
 const TAB_ICONS = {
   home: 'home',
-  categories: 'grid',
-  treasure: 'diamond',
-  store: 'location',
-  profile: 'person',
+  categories: 'grid-outline',
+  store: 'storefront',
+  profile: 'user-circle',
 };
 
 function YouTabBadge() {
   return (
     <View style={badgeStyles.badge}>
-      <AppText variant="xs" weight="semiBold" style={badgeStyles.text}>₹500</AppText>
+      <AppText variant="xs" weight="regular" style={badgeStyles.text}>₹500</AppText>
     </View>
   );
 }
 
 const badgeStyles = StyleSheet.create({
   badge: {
-    backgroundColor: TAB_PURPLE,
+    backgroundColor: APP_COLORS?.pink,
     paddingHorizontal: 1,
     paddingVertical: 0,
     borderRadius: 10,
-    minWidth: 24,
+    minWidth: 30,
     alignItems: 'center',
   },
   text: {
-    fontSize: 8,
-    fontWeight: '700',
     color: '#fff',
+  },
+  badgeContainer: {
+    position: 'relative',
   },
   badgePosition: {
     position: 'absolute',
-    bottom: -4,
-    right: '50%',
-    transform: [{ translateX: '50%' }],
+    bottom: -6,
+    left: '50%',
+    transform: [{ translateX: -22 }],
   },
 });
 
@@ -48,15 +48,15 @@ export default function TabLayout() {
       screenOptions={{
         lazy: true,
         headerShown: false,
-        tabBarActiveTintColor: TAB_PURPLE,
-        tabBarInactiveTintColor: '#9ca6af',
+        tabBarActiveTintColor: APP_COLORS?.pink,
+        tabBarInactiveTintColor: '#555555',
         tabBarStyle: {
           backgroundColor: '#fff',
           borderTopColor: '#f3f4f6',
         },
         tabBarLabelStyle: {
-          fontSize: 10,
-          fontWeight: '500',
+          fontFamily: FONT_FAMILY?.regular,
+          fontSize: FONT_SIZE?.xs,
         },
       }}
     >
@@ -69,7 +69,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
-            <Ionicons name={TAB_ICONS.home} size={16} color={color} />
+            <Octicons name={TAB_ICONS.home} size={18} color={color} style={{ fill: `${color}10` }} />
           ),
         }}
       />
@@ -78,16 +78,7 @@ export default function TabLayout() {
         options={{
           title: 'Categories',
           tabBarIcon: ({ color }) => (
-            <Ionicons name={TAB_ICONS.categories} size={16} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="treasure"
-        options={{
-          title: 'Treasure Chest',
-          tabBarIcon: ({ color }) => (
-            <Ionicons name={TAB_ICONS.treasure} size={16} color={color} />
+            <Ionicons name={TAB_ICONS.categories} size={18} color={color} />
           ),
         }}
       />
@@ -96,7 +87,7 @@ export default function TabLayout() {
         options={{
           title: 'Find Store',
           tabBarIcon: ({ color }) => (
-            <Ionicons name={TAB_ICONS.store} size={16} color={color} />
+            <MaterialIcons name={TAB_ICONS.store} size={18} color={color} />
           ),
         }}
       />
@@ -105,8 +96,8 @@ export default function TabLayout() {
         options={{
           title: 'You',
           tabBarIcon: ({ color }) => (
-            <View>
-              <Ionicons name={TAB_ICONS.profile} size={16} color={color} />
+            <View style={badgeStyles.badgeContainer}>
+              <FontAwesome6 name={TAB_ICONS.profile} size={18} color={color} />
               <View style={badgeStyles.badgePosition}>
                 <YouTabBadge />
               </View>

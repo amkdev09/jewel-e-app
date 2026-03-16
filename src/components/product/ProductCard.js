@@ -1,9 +1,9 @@
 import { AppText } from '@/components/AppText';
-import { Colors, SPACING } from '@/constants/theme';
+import { APP_COLORS, SPACING } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Image } from 'expo-image';
 import React, { memo } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 function ProductCardComponent({
   product,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: Colors.light.backgroundSecondary,
+    backgroundColor: APP_COLORS?.secondary?.f,
   },
   image: {
     borderRadius: 12,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     left: 8,
-    backgroundColor: Colors.light.primary,
+    backgroundColor: APP_COLORS?.primary?.b,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
@@ -106,18 +106,18 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: '500',
-    color: Colors.light.text,
+    color: APP_COLORS?.black,
     lineHeight: 20,
   },
   rating: {
     fontSize: 12,
-    color: Colors.light.textSecondary,
+    color: APP_COLORS?.primary?.c,
     marginTop: 2,
   },
   price: {
     fontSize: 15,
     fontWeight: '700',
-    color: Colors.light.text,
+    color: APP_COLORS?.black,
     marginTop: 4,
   },
 });

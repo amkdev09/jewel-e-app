@@ -1,6 +1,6 @@
+import { SPACING } from '@/constants/index';
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { SPACING } from '@/src/constants/spacing';
+import { StyleSheet, View } from 'react-native';
 
 export function Card({ children, style, ...rest }) {
   return (
