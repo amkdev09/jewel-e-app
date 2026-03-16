@@ -7,15 +7,16 @@ export async function getCart() {
 }
 
 export async function addToCart(payload) {
+  // payload shape must match backend docs for /api/cart/add
   const { data } = await axiosClient.post(API.CART.ADD, payload);
   return data;
 }
 
-export async function updateCartItem(id, payload) {
-  const { data } = await axiosClient.patch(API.CART.UPDATE(id), payload);
+export async function removeFromCart(payload) {
+  // { productId, variantId }
+  const { data } = await axiosClient.delete(API.CART.REMOVE, {
+    data: payload,
+  });
   return data;
 }
 
-export async function removeFromCart(id) {
-  await axiosClient.delete(API.CART.REMOVE(id));
-}

@@ -11,14 +11,8 @@ export async function fetchProductById(id) {
   return data;
 }
 
-export async function fetchFeaturedProducts() {
-  const { data } = await axiosClient.get(API.PRODUCTS.FEATURED);
+export async function searchProducts(params = {}) {
+  const { data } = await axiosClient.get(API.PRODUCTS.SEARCH, { params });
   return data;
 }
 
-export async function searchProducts(query) {
-  const { data } = await axiosClient.get(API.PRODUCTS.SEARCH, {
-    params: { q: query },
-  });
-  return data;
-}

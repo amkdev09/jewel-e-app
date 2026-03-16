@@ -1,10 +1,9 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-import { axiosClient } from '@/src/services/api/axiosClient';
-import API from '@/src/services/api/endpoints';
-import { TOKEN_KEY, REFRESH_KEY } from '@/src/services/api/interceptors';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { userServices } from '../services/appServices';
+import authServices from '../services/authServices';
 
 export const useAuthStore = create(
   persist(
@@ -19,19 +18,15 @@ export const useAuthStore = create(
       login: async (email, password) => {
         set({ isLoading: true });
         try {
-          const { data } = await axiosClient.post(API.AUTH.LOGIN, {
-            email,
-            password,
-          });
+          const { data } = await authServices.login(email, password);
           const { accessToken, refreshToken, user } = data;
-          await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
+          await SecureStore.setItemAsync('token', accessToken);
           if (refreshToken) {
-            await SecureStore.setItemAsync(REFRESH_KEY, refreshToken);
+            await SecureStore.setItemAsync('refreshToken', refreshToken);
           }
           set({
             isAuthenticated: true,
             user: user || data.user,
-            isPremium: user?.isPremium ?? data.isPremium ?? false,
             isLoading: false,
           });
           return { success: true };
@@ -47,18 +42,17 @@ export const useAuthStore = create(
       register: async (payload) => {
         set({ isLoading: true });
         try {
-          const { data } = await axiosClient.post(API.AUTH.REGISTER, payload);
+          const { data } = await authServices.register(payload);
           const { accessToken, refreshToken, user } = data;
           if (accessToken) {
-            await SecureStore.setItemAsync(TOKEN_KEY, accessToken);
+            await SecureStore.setItemAsync('token', accessToken);
             if (refreshToken) {
-              await SecureStore.setItemAsync(REFRESH_KEY, refreshToken);
+              await SecureStore.setItemAsync('refreshToken', refreshToken);
             }
           }
           set({
             isAuthenticated: !!accessToken,
             user: user || data.user,
-            isPremium: user?.isPremium ?? false,
             isLoading: false,
           });
           return { success: true };
@@ -73,31 +67,29 @@ export const useAuthStore = create(
 
       logout: async () => {
         try {
-          await axiosClient.post(API.AUTH.LOGOUT).catch(() => {});
+          await authServices.logout().catch(() => {});
         } catch (_) {}
-        await SecureStore.deleteItemAsync(TOKEN_KEY);
-        await SecureStore.deleteItemAsync(REFRESH_KEY);
+        await SecureStore.deleteItemAsync('token');
+        await SecureStore.deleteItemAsync('refreshToken');
         set({
           isAuthenticated: false,
           user: null,
-          isPremium: false,
         });
       },
 
-      setUser: (user) => set({ user, isPremium: user?.isPremium ?? false }),
+      setUser: (user) => set({ user }),
 
       hydrateAuth: async () => {
-        const token = await SecureStore.getItemAsync(TOKEN_KEY);
+        const token = await SecureStore.getItemAsync('token');
         if (!token) {
           set({ isAuthenticated: false, user: null, isLoading: false });
           return;
         }
         try {
-          const { data } = await axiosClient.get(API.AUTH.ME);
+          const { data } = await userServices.getProfile();
           set({
             isAuthenticated: true,
             user: data.user || data,
-            isPremium: (data.user || data)?.isPremium ?? false,
             isLoading: false,
           });
         } catch {
