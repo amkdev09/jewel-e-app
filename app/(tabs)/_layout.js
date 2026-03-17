@@ -1,4 +1,4 @@
-import { AppText } from '@/components/AppText';
+import { AppText } from '@/components/ui/appText';
 import { APP_COLORS, FONT_FAMILY, FONT_SIZE } from '@/constants/index';
 import { FontAwesome6, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
@@ -14,7 +14,9 @@ const TAB_ICONS = {
 function YouTabBadge() {
   return (
     <View style={badgeStyles.badge}>
-      <AppText variant="xs" weight="regular" style={badgeStyles.text}>₹500</AppText>
+      <AppText variant="xs" weight="regular" style={badgeStyles.text}>
+        ₹500
+      </AppText>
     </View>
   );
 }
@@ -60,16 +62,18 @@ export default function TabLayout() {
         },
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{ href: null }}
-      />
+      <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen
         name="home"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => (
-            <Octicons name={TAB_ICONS.home} size={18} color={color} style={{ fill: `${color}10` }} />
+            <Octicons
+              name={TAB_ICONS.home}
+              size={18}
+              color={color}
+              style={{ fill: `${color}10` }}
+            />
           ),
         }}
       />

@@ -1,65 +1,68 @@
 // app/(auth)/register.js
-import { AppText } from '@/components/AppText';
-import { SPACING } from '@/constants';
+import AppInput from '@/components/ui/appInput';
+import AppText from '@/components/ui/appText';
+import PasswordInput from '@/components/ui/passwordInput';
+import PhoneInput from '@/components/ui/phoneInput';
+import { APP_COLORS, SPACING } from '@/constants';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
-import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import AppInput from '../../src/components/ui/AppInput';
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+const passwordSchema = Yup.string()
+  .min(8, 'Password must be at least 8 characters')
+  .matches(/[A-Z]/, 'At least one uppercase letter')
+  .matches(/[a-z]/, 'At least one lowercase letter')
+  .matches(/[0-9]/, 'At least one number')
+  .matches(/[^A-Za-z0-9]/, 'At least one symbol')
+  .required('Password is required');
+
+const RegisterSchema = Yup.object().shape({
+  firstName: Yup.string().trim().min(2, 'First name is too short').max(100, 'First name is too long').required('First name is required'),
+  lastName: Yup.string().trim().max(100, 'Last name is too long'),
+  email: Yup.string().trim().email('Please enter a valid email').required('Email is required'),
+  countryCode: Yup.string().matches(/^\+\d+$/, 'Invalid country code').required('Country code is required'),
+  mobile: Yup.string()
+    .trim()
+    .min(8, 'Mobile must be at least 8 digits')
+    .max(15, 'Mobile must be at most 15 digits')
+    .required('Mobile is required'),
+  password: passwordSchema,
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords do not match')
+    .required('Confirm password is required'),
+  gender: Yup.string().oneOf(['female', 'male', 'unspecified']).default('unspecified'),
+  whatsappOptIn: Yup.boolean().default(true),
+  termsAccepted: Yup.boolean().oneOf([true], 'You must accept the terms & conditions'),
+});
 
 export default function RegisterScreen() {
   const register = useAuthStore((s) => s.register);
-
-  const [countryCode] = useState('+91');
-  const [mobile, setMobile] = useState('');
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [gender, setGender] = useState('unspecified'); // 'female' | 'male' | 'unspecified'
-  const [whatsappOptIn, setWhatsappOptIn] = useState(true);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => {});
+  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => {});
 
-  const handleRegister = async () => {
-    if (!email.trim()) {
-      setEmailError('Please enter a valid email');
-      return;
-    }
-    if (!firstName.trim() || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill all required fields');
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-    if (!termsAccepted) {
-      Alert.alert('Error', 'Please accept the terms & conditions');
-      return;
-    }
-
-    setEmailError('');
+  const handleRegister = async (values) => {
+    if (loading) return;
     setLoading(true);
-    const result = await register({
-      name: `${firstName.trim()} ${lastName.trim()}`.trim(),
-      email: email.trim(),
-      password,
-    });
+
+    const fullName = `${values.firstName.trim()} ${values.lastName?.trim() || ''}`.trim();
+    const payload = {
+      name: fullName,
+      email: values.email.trim(),
+      countryCode: values.countryCode,
+      phone: values.mobile.trim(),
+      password: values.password,
+      gender:
+        values.gender === 'unspecified' ? 'prefer_not_to_say' : values.gender,
+    };
+
+    const result = await register(payload);
     setLoading(false);
 
     if (!result.success) {
@@ -68,190 +71,326 @@ export default function RegisterScreen() {
     // Success navigation is handled inside the store / layout in this project.
   };
 
-  const disabled =
-    loading ||
-    !email.trim() ||
-    !firstName.trim() ||
-    !password ||
-    !confirmPassword ||
-    !termsAccepted;
-
   return (
     <AuthLayout>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Mobile field */}
-        <View style={styles.mobileRow}>
-          <View style={styles.countryContainer}>
-            <AppText style={styles.countryCodeText}>{countryCode}</AppText>
-            <Feather name="chevron-down" size={16} color="#4B5563" />
-          </View>
-          <TextInput
-            style={styles.mobileInput}
-            placeholder="Mobile"
-            placeholderTextColor="#9CA3AF"
-            keyboardType="phone-pad"
-            value={mobile}
-            onChangeText={setMobile}
-            editable={!loading}
-          />
-        </View>
-
-        {/* Email with error */}
-        <View style={styles.fieldBlock}>
-          <AppInput
-            placeholder="Enter Email"
-            value={email}
-            onChangeText={(value) => {
-              setEmail(value);
-              if (emailError) setEmailError('');
-            }}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            editable={!loading}
-          />
-          {!!emailError && <AppText style={styles.errorText}>{emailError}</AppText>}
-        </View>
-
-        {/* First / Last name row with floating labels */}
-        <View style={styles.nameRow}>
-          <TextInput
-            placeholder="First Name"
-            placeholderTextColor="#9CA3AF"
-            style={styles.floatingField}
-            value={firstName}
-            onChangeText={setFirstName}
-            editable={!loading}
-          />
-          <View style={styles.nameSpacer} />
-          <TextInput
-            placeholder="Last Name"
-            placeholderTextColor="#9CA3AF"
-            style={styles.floatingField}
-            value={lastName}
-            onChangeText={setLastName}
-            editable={!loading}
-          />
-        </View>
-
-        {/* Password */}
-        <View style={styles.fieldBlock}>
-          <View style={styles.passwordWrapper}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Password"
-              placeholderTextColor="#9CA3AF"
-              secureTextEntry={!showPassword}
-              value={password}
-              onChangeText={setPassword}
-              editable={!loading}
-            />
-            <TouchableOpacity onPress={() => setShowPassword((prev) => !prev)} hitSlop={8}>
-              <Feather name={showPassword ? 'eye' : 'eye-off'} size={18} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.passwordHintRow}>
-            {['8 Chrs', '1 Uppercase', '1 Lowercase', '1 Symbol', '1 Number'].map((hint) => (
-              <AppText key={hint} style={styles.passwordHintText}>
-                <Text style={styles.passwordHintTextDot}>●</Text> {hint}
-              </AppText>
-            ))}
-          </View>
-        </View>
-
-        {/* Confirm Password */}
-        <View style={styles.fieldBlock}>
-          <View style={styles.passwordWrapper}>
-            <TextInput
-              style={styles.passwordInput}
-              placeholder="Confirm Password"
-              placeholderTextColor="#9CA3AF"
-              secureTextEntry={!showConfirmPassword}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              editable={!loading}
-            />
-            <TouchableOpacity onPress={() => setShowConfirmPassword((prev) => !prev)} hitSlop={8}>
-              <Feather name={showConfirmPassword ? 'eye' : 'eye-off'} size={18} color="#6B7280" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Gender */}
-        <View style={styles.genderRow}>
-          <GenderOption
-            label="Female"
-            selected={gender === 'female'}
-            onPress={() => setGender('female')}
-          />
-          <GenderOption
-            label="Male"
-            selected={gender === 'male'}
-            onPress={() => setGender('male')}
-          />
-          <GenderOption
-            label="I don't want to specify"
-            selected={gender === 'unspecified'}
-            onPress={() => setGender('unspecified')}
-          />
-        </View>
-
-        {/* WhatsApp consent card */}
-        <TouchableOpacity
-          style={styles.whatsappCard}
-          activeOpacity={0.9}
-          onPress={() => setWhatsappOptIn((prev) => !prev)}
-        >
-          <View style={styles.whatsappLeft}>
-            <View
-              style={[styles.whatsappCheckOuter, whatsappOptIn && styles.whatsappCheckOuterActive]}
-            >
-              {whatsappOptIn && <MaterialCommunityIcons name="check" size={14} color="#FFFFFF" />}
-            </View>
-            <View style={styles.whatsappTextContainer}>
-              <AppText style={styles.whatsappTitle}>Opt for WhatsApp & SMS support</AppText>
-              <AppText style={styles.whatsappSubtitle}>
-                We'll share your delivery updates, order documents, and marketing messages via
-                WhatsApp and SMS.
-              </AppText>
-            </View>
-          </View>
-          <Ionicons name="logo-whatsapp" size={24} color="#25D366" />
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
+          <Ionicons name="arrow-back" size={24} color={APP_COLORS.darkText} />
         </TouchableOpacity>
-
-        {/* Terms & Conditions */}
-        <View style={styles.termsRow}>
-          <TouchableOpacity
-            style={styles.checkboxOuter}
-            onPress={() => setTermsAccepted((prev) => !prev)}
-          >
-            {termsAccepted && <MaterialCommunityIcons name="check" size={16} color="#7C3AED" />}
-          </TouchableOpacity>
-          <View style={styles.termsTextWrapper}>
-            <AppText style={styles.termsText}>
-              By continuing you acknowledge that you are at least 18 years old and have read and
-              agree to CaratLane's <AppText style={styles.linkText}>T&C</AppText> and{' '}
-              <AppText style={styles.linkText}>Privacy Policy</AppText>.
-            </AppText>
+        {/* Top signup hero */}
+        <View style={styles.heroContainer}>
+          <View style={styles.heroLogoWrapper}>
+            <View style={styles.heroLogoInner}>
+              <Ionicons name="sparkles-outline" size={20} color="#7C3AED" />
+            </View>
           </View>
-        </View>
-
-        {/* Primary button */}
-        <TouchableOpacity
-          style={[styles.primaryButton, disabled && styles.primaryButtonDisabled]}
-          disabled={disabled}
-          onPress={handleRegister}
-        >
-          <AppText style={styles.primaryButtonText}>
-            {loading ? 'SIGNING YOU UP...' : 'SIGN ME UP'}
+          <AppText variant="xl" weight="semiBold" style={styles.title}>
+            Signup with CaratLane
           </AppText>
-        </TouchableOpacity>
+          <AppText variant="sm" weight="regular" style={styles.desc}>
+            Unlock best prices and become an insider for our exclusive launches &amp; offers.
+            Complete your profile and get ₹500 worth of xClusive Points.
+          </AppText>
+
+          {/* WhatsApp signup CTA */}
+          <TouchableOpacity
+            style={styles.whatsappBtn}
+            activeOpacity={0.8}
+            onPress={() => router.push('/(tabs)/home')}
+          >
+            <Ionicons name="logo-whatsapp" size={24} color="#25d366" />
+            <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>
+              SIGNUP WITH WHATSAPP
+            </AppText>
+          </TouchableOpacity>
+
+          {/* Social buttons */}
+          <View style={styles.socialRow}>
+            <TouchableOpacity
+              style={styles.socialBtn}
+              activeOpacity={0.8}
+              onPress={() => router.replace('/(tabs)/home')}
+            >
+              <Ionicons name="logo-google" size={28} color="#4285F4" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.socialBtn, styles.facebookBtn]}
+              activeOpacity={0.8}
+              onPress={() => router.replace('/(tabs)/home')}
+            >
+              <Ionicons name="logo-facebook" size={28} color="#1877f2" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Helper legal text */}
+          <View style={styles.tcTextWrap}>
+            <AppText variant="xs" weight="regular" style={styles.tcText}>
+              By continuing you acknowledge that you are at least 18 years old and have read and
+              agree to CaratLane&apos;s{' '}
+            </AppText>
+            <TouchableOpacity onPress={openTc}>
+              <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                T&C
+              </AppText>
+            </TouchableOpacity>
+            <AppText variant="xs" weight="regular" style={styles.tcText}>
+              {' '}
+            </AppText>
+            <TouchableOpacity onPress={openPrivacy}>
+              <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                Privacy Policy.
+              </AppText>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.orWrap}>
+          <View style={styles.orLine} />
+          <AppText variant="sm" weight="medium" style={styles.orText}>
+            OR
+          </AppText>
+          <View style={styles.orLine} />
+        </View>
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            countryCode: '+91',
+            mobile: '',
+            password: '',
+            confirmPassword: '',
+            gender: 'unspecified',
+            whatsappOptIn: true,
+            termsAccepted: false,
+          }}
+          validationSchema={RegisterSchema}
+          onSubmit={handleRegister}
+          validateOnBlur
+          validateOnChange={false}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            touched,
+            setFieldValue,
+          }) => {
+            const passwordChecks = [
+              {
+                label: '8 Chrs',
+                isValid: values.password.length >= 8,
+              },
+              {
+                label: '1 Uppercase',
+                isValid: /[A-Z]/.test(values.password),
+              },
+              {
+                label: '1 Lowercase',
+                isValid: /[a-z]/.test(values.password),
+              },
+              {
+                label: '1 Symbol',
+                isValid: /[^A-Za-z0-9]/.test(values.password),
+              },
+              {
+                label: '1 Number',
+                isValid: /[0-9]/.test(values.password),
+              },
+            ];
+
+            const disabled = loading;
+
+            return (
+              <>
+                {/* Mobile field */}
+                <PhoneInput
+                  label="Mobile"
+                  value={values.mobile}
+                  onChangeText={handleChange('mobile')}
+                  error={touched.mobile && errors.mobile ? errors.mobile : ''}
+                  countryCode={values.countryCode}
+                  onCountryCodeChange={(code) => setFieldValue('countryCode', code)}
+                  editable={!loading}
+                />
+
+                {/* Email with error */}
+                <AppInput
+                  label="Enter Email"
+                  value={values.email}
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  editable={!loading}
+                  error={touched.email && errors.email ? errors.email : ''}
+                />
+
+                {/* First / Last name row with floating labels */}
+                <View style={styles.nameRow}>
+                  <AppInput
+                    label="First Name"
+                    value={values.firstName}
+                    onChangeText={handleChange('firstName')}
+                    onBlur={handleBlur('firstName')}
+                    editable={!loading}
+                    error={touched.firstName && errors.firstName ? errors.firstName : ''}
+                  />
+                  <AppInput
+                    label="Last Name"
+                    value={values.lastName}
+                    onChangeText={handleChange('lastName')}
+                    onBlur={handleBlur('lastName')}
+                    editable={!loading}
+                    error={touched.lastName && errors.lastName ? errors.lastName : ''}
+                  />
+                </View>
+
+                {/* Password */}
+                <View style={styles.fieldBlock}>
+                  <PasswordInput
+                    label="Password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    onBlur={handleBlur('password')}
+                    error={touched.password && errors.password ? errors.password : ''}
+                    editable={!loading}
+                  />
+                  <View style={styles.passwordHintRow}>
+                    {passwordChecks.map((hint) => (
+                      <AppText
+                        key={hint.label}
+                        style={[
+                          styles.passwordHintText,
+                          hint.isValid && { color: '#059669' },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.passwordHintTextDot,
+                            hint.isValid && { color: '#059669' },
+                          ]}
+                        >
+                          ●
+                        </Text>{' '}
+                        {hint.label}
+                      </AppText>
+                    ))}
+                  </View>
+                </View>
+
+                {/* Confirm Password */}
+                <PasswordInput
+                  label="Confirm Password"
+                  value={values.confirmPassword}
+                  onChangeText={handleChange('confirmPassword')}
+                  onBlur={handleBlur('confirmPassword')}
+                  error={
+                    touched.confirmPassword && errors.confirmPassword
+                      ? errors.confirmPassword
+                      : ''
+                  }
+                  editable={!loading}
+                />
+
+                {/* Gender */}
+                <View style={styles.genderRow}>
+                  <GenderOption
+                    label="Female"
+                    selected={values.gender === 'female'}
+                    onPress={() => setFieldValue('gender', 'female')}
+                  />
+                  <GenderOption
+                    label="Male"
+                    selected={values.gender === 'male'}
+                    onPress={() => setFieldValue('gender', 'male')}
+                  />
+                  <GenderOption
+                    label="I don't want to specify"
+                    selected={values.gender === 'unspecified'}
+                    onPress={() => setFieldValue('gender', 'unspecified')}
+                  />
+                </View>
+
+                {/* WhatsApp consent card */}
+                <TouchableOpacity
+                  style={styles.whatsappCard}
+                  activeOpacity={0.9}
+                  onPress={() => setFieldValue('whatsappOptIn', !values.whatsappOptIn)}
+                >
+                  <View style={styles.whatsappLeft}>
+                    <View
+                      style={[
+                        styles.whatsappCheckOuter,
+                        values.whatsappOptIn && styles.whatsappCheckOuterActive,
+                      ]}
+                    >
+                      {values.whatsappOptIn && (
+                        <MaterialCommunityIcons name="check" size={14} color="#FFFFFF" />
+                      )}
+                    </View>
+                    <View style={styles.whatsappTextContainer}>
+                      <AppText style={styles.whatsappTitle}>
+                        Opt for WhatsApp & SMS support
+                      </AppText>
+                      <AppText style={styles.whatsappSubtitle}>
+                        We&apos;ll share your delivery updates, order documents, and marketing
+                        messages via WhatsApp and SMS.
+                      </AppText>
+                    </View>
+                  </View>
+                  <Ionicons name="logo-whatsapp" size={24} color="#25D366" />
+                </TouchableOpacity>
+
+                {/* Terms & Conditions */}
+                <View style={styles.termsRow}>
+                  <TouchableOpacity
+                    style={styles.checkboxOuter}
+                    onPress={() => setFieldValue('termsAccepted', !values.termsAccepted)}
+                  >
+                    {values.termsAccepted && (
+                      <MaterialCommunityIcons name="check" size={14} color="#7C3AED" />
+                    )}
+                  </TouchableOpacity>
+                  <View style={styles.termsTextWrapper}>
+                    <AppText style={styles.termsText}>
+                      By continuing you acknowledge that you are at least 18 years old and have read
+                      and agree to CaratLane&apos;s{' '}
+                      <AppText style={styles.linkText}>T&C</AppText> and{' '}
+                      <AppText style={styles.linkText}>Privacy Policy</AppText>.
+                    </AppText>
+                    {errors.termsAccepted && (
+                      <AppText style={styles.errorText}>{errors.termsAccepted}</AppText>
+                    )}
+                  </View>
+                </View>
+
+                {/* Primary button */}
+                <TouchableOpacity
+                  style={[styles.primaryButton, disabled && styles.primaryButtonDisabled]}
+                  disabled={disabled}
+                  onPress={handleSubmit}
+                >
+                  <AppText style={styles.primaryButtonText}>
+                    {loading ? 'SIGNING YOU UP...' : 'SIGN ME UP'}
+                  </AppText>
+                </TouchableOpacity>
+              </>
+            );
+          }}
+        </Formik>
 
         {/* Bottom login link */}
         <View style={styles.bottomLoginRow}>
-          <AppText style={styles.bottomLoginText}>Already have an account? </AppText>
+          <AppText variant="sm" weight="regular" style={styles.bottomLoginText}>
+            Already have an account?{' '}
+          </AppText>
           <Link href="/(auth)/login" asChild>
             <TouchableOpacity>
-              <AppText style={styles.bottomLoginLink}>Login</AppText>
+              <AppText variant="sm" weight="semiBold" style={styles.bottomLoginLink}>
+                Login
+              </AppText>
             </TouchableOpacity>
           </Link>
         </View>
@@ -278,47 +417,108 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.xl,
   },
 
+  // Hero
+  heroContainer: {
+    flex: 1,
+  },
+  heroLogoWrapper: {
+    alignSelf: 'center',
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 14,
+    backgroundColor: '#F9FAFB',
+  },
+  heroLogoInner: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F3E8FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    color: APP_COLORS.primary.a,
+    textAlign: 'center',
+  },
+  desc: {
+    color: APP_COLORS.darkText,
+    marginVertical: SPACING.xxl,
+    textAlign: 'center',
+  },
+  whatsappBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 48,
+    backgroundColor: '#e6f6e6',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#25d366',
+    marginBottom: SPACING.base,
+    gap: SPACING.base,
+  },
+  whatsappBtnText: {
+    color: APP_COLORS.primary.a,
+  },
+  socialRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.base,
+    marginVertical: SPACING.xxl,
+  },
+  socialBtn: {
+    width: 46,
+    height: 46,
+    borderRadius: 28,
+    backgroundColor: '#fff4eb',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  facebookBtn: {
+    backgroundColor: '#ebebff',
+  },
+  tcTextWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  tcText: {
+    fontSize: 12,
+    color: APP_COLORS.darkText,
+    lineHeight: 18,
+  },
+  tcLink: {
+    color: APP_COLORS.pink,
+  },
+  orWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: SPACING.xxl,
+    gap: SPACING.base,
+  },
+  orLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: APP_COLORS.secondary.d,
+  },
+  orText: {
+    color: APP_COLORS.secondary.d,
+    fontWeight: '500',
+  },
   // Mobile
   mobileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18,
-  },
-  countryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginRight: 8,
-  },
-  flagCircle: {
-    width: 20,
-    height: 14,
-    borderRadius: 3,
-    backgroundColor: '#F97316',
-    marginRight: 6,
-  },
-  countryCodeText: {
-    fontSize: 14,
-    color: '#111827',
-    marginRight: 4,
-  },
-  mobileInput: {
-    flex: 1,
-    height: 44,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    paddingHorizontal: 12,
-    fontSize: 14,
-    color: '#111827',
   },
 
   fieldBlock: {
-    marginBottom: 16,
+    flex: 1,
   },
 
   textInput: {
@@ -346,10 +546,13 @@ const styles = StyleSheet.create({
   // Name row with floating label
   nameRow: {
     flexDirection: 'row',
-    marginBottom: 20,
+    gap: 12,
   },
   nameSpacer: {
     width: 12,
+  },
+  nameInput: {
+    flex: 1,
   },
   floatingField: {
     flex: 1,
@@ -374,25 +577,7 @@ const styles = StyleSheet.create({
   },
 
   // Passwords
-  passwordWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    paddingHorizontal: 12,
-    height: 48,
-    backgroundColor: '#F9FAFB',
-  },
-  passwordInput: {
-    flex: 1,
-    paddingVertical: 0,
-    marginRight: 8,
-    fontSize: 14,
-    color: '#111827',
-  },
   passwordHintRow: {
-    marginTop: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -454,11 +639,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 14,
     marginBottom: 20,
-    shadowColor: '#000000',
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
   },
   whatsappLeft: {
     flexDirection: 'row',
@@ -501,8 +681,8 @@ const styles = StyleSheet.create({
     marginBottom: 26,
   },
   checkboxOuter: {
-    width: 20,
-    height: 20,
+    width: 16,
+    height: 16,
     borderRadius: 4,
     borderWidth: 1.5,
     borderColor: '#7C3AED',
@@ -548,12 +728,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   bottomLoginText: {
-    fontSize: 12,
     color: '#6B7280',
   },
   bottomLoginLink: {
-    fontSize: 12,
-    color: '#7C3AED',
+    color: APP_COLORS.pink,
     fontWeight: '600',
   },
 });

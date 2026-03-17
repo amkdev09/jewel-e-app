@@ -1,17 +1,31 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { APP_COLORS, SPACING } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Image } from 'expo-image';
 import React, { memo } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
-function ProductCardComponent({
+interface ProductCardProps {
+  product: {
+    name: string;
+    price: number;
+    image: string;
+    rating: number | null;
+    isNew: boolean;
+  };
+  width?: number;
+  onPress: () => void;
+  onWishlist: () => void;
+  isInWishlist: boolean;
+}
+
+const ProductCardComponent = ({
   product,
   width,
   onPress,
   onWishlist,
   isInWishlist = false,
-}) {
+} : ProductCardProps) => {
   const { name, price, image, rating, isNew } = product;
 
   return (
@@ -43,7 +57,7 @@ function ProductCardComponent({
         </TouchableOpacity>
       </View>
       <View style={styles.info}>
-        <AppText variant="base" weight="medium" style={styles.name} numberOfLines={2}>
+        <AppText variant="base" weight="semiBold" style={styles.name} >
           {name}
         </AppText>
         {rating != null && (

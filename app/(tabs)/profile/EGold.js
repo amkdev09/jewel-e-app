@@ -1,16 +1,11 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const PURPLE = '#7c3aed';
@@ -33,19 +28,37 @@ function ArrowConnector({ lineHeight = 56 }) {
   );
 }
 const arrowHeadStyle = {
-  width: 0, height: 0,
-  borderLeftWidth: 7, borderRightWidth: 7, borderTopWidth: 10,
-  borderLeftColor: 'transparent', borderRightColor: 'transparent',
+  width: 0,
+  height: 0,
+  borderLeftWidth: 7,
+  borderRightWidth: 7,
+  borderTopWidth: 10,
+  borderLeftColor: 'transparent',
+  borderRightColor: 'transparent',
   borderTopColor: PURPLE,
   marginTop: -1,
 };
 
 // ── Sparkle helpers ──────────────────────────────────────────────────────────
 const Sparkle = ({ style }) => (
-  <AppText style={[{ fontSize: 18, color: PURPLE, fontWeight: '700', opacity: 0.55, position: 'absolute' }, style]}>+</AppText>
+  <AppText
+    style={[
+      { fontSize: 18, color: PURPLE, fontWeight: '700', opacity: 0.55, position: 'absolute' },
+      style,
+    ]}
+  >
+    +
+  </AppText>
 );
 const SparkleSmall = ({ style }) => (
-  <AppText style={[{ fontSize: 22, color: PURPLE, fontWeight: '700', opacity: 0.4, position: 'absolute' }, style]}>·</AppText>
+  <AppText
+    style={[
+      { fontSize: 22, color: PURPLE, fontWeight: '700', opacity: 0.4, position: 'absolute' },
+      style,
+    ]}
+  >
+    ·
+  </AppText>
 );
 
 // ── Jewellery Box Illustration ───────────────────────────────────────────────
@@ -53,8 +66,12 @@ function JewelleryBoxIllustration() {
   return (
     <View style={{ width: 150, height: 150, alignItems: 'center', justifyContent: 'center' }}>
       <View style={jb.circle}>
-        <View style={jb.lid}><View style={jb.lidBump} /></View>
-        <View style={jb.base}><View style={jb.slot} /></View>
+        <View style={jb.lid}>
+          <View style={jb.lidBump} />
+        </View>
+        <View style={jb.base}>
+          <View style={jb.slot} />
+        </View>
         <View style={jb.jewel} />
       </View>
       <Sparkle style={{ top: 8, right: 14 }} />
@@ -66,25 +83,95 @@ function JewelleryBoxIllustration() {
   );
 }
 const jb = StyleSheet.create({
-  circle: { width: 112, height: 112, borderRadius: 56, borderWidth: 1.5, borderColor: PURPLE, borderStyle: 'dashed', backgroundColor: PURPLE_PALE, alignItems: 'center', justifyContent: 'center' },
-  lid: { position: 'absolute', top: 26, width: 58, height: 24, borderWidth: 2, borderColor: PURPLE, borderRadius: 6, backgroundColor: PURPLE_PALE, alignItems: 'center' },
-  lidBump: { position: 'absolute', top: -7, width: 16, height: 9, borderRadius: 8, borderWidth: 2, borderColor: PURPLE, backgroundColor: PURPLE_PALE },
-  base: { position: 'absolute', top: 48, width: 54, height: 28, borderWidth: 2, borderColor: PURPLE, borderRadius: 4, backgroundColor: PURPLE_PALE, alignItems: 'center', justifyContent: 'center' },
-  slot: { width: 32, height: 10, borderWidth: 1.5, borderColor: PURPLE, borderRadius: 2, backgroundColor: '#fff' },
-  jewel: { position: 'absolute', top: 18, width: 10, height: 10, borderRadius: 5, backgroundColor: '#eab308', borderWidth: 1.5, borderColor: PURPLE },
+  circle: {
+    width: 112,
+    height: 112,
+    borderRadius: 56,
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    borderStyle: 'dashed',
+    backgroundColor: PURPLE_PALE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lid: {
+    position: 'absolute',
+    top: 26,
+    width: 58,
+    height: 24,
+    borderWidth: 2,
+    borderColor: PURPLE,
+    borderRadius: 6,
+    backgroundColor: PURPLE_PALE,
+    alignItems: 'center',
+  },
+  lidBump: {
+    position: 'absolute',
+    top: -7,
+    width: 16,
+    height: 9,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: PURPLE,
+    backgroundColor: PURPLE_PALE,
+  },
+  base: {
+    position: 'absolute',
+    top: 48,
+    width: 54,
+    height: 28,
+    borderWidth: 2,
+    borderColor: PURPLE,
+    borderRadius: 4,
+    backgroundColor: PURPLE_PALE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  slot: {
+    width: 32,
+    height: 10,
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    borderRadius: 2,
+    backgroundColor: '#fff',
+  },
+  jewel: {
+    position: 'absolute',
+    top: 18,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#eab308',
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+  },
 });
 
 // ── Hand Gold Illustration ───────────────────────────────────────────────────
 function HandGoldIllustration() {
   return (
-    <View style={{ width: 170, height: 150, alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-      <View style={hg.goldBar}><View style={hg.goldShine} /></View>
+    <View
+      style={{
+        width: 170,
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
+    >
+      <View style={hg.goldBar}>
+        <View style={hg.goldShine} />
+      </View>
       <View style={hg.palm}>
-        {[0, 1, 2, 3].map((i) => <View key={i} style={[hg.finger, { height: 16 + i * 3 }]} />)}
+        {[0, 1, 2, 3].map((i) => (
+          <View key={i} style={[hg.finger, { height: 16 + i * 3 }]} />
+        ))}
       </View>
       <View style={hg.wrist} />
       <View style={hg.speedLines}>
-        {[22, 14, 18].map((w, i) => <View key={i} style={[hg.speedLine, { width: w }]} />)}
+        {[22, 14, 18].map((w, i) => (
+          <View key={i} style={[hg.speedLine, { width: w }]} />
+        ))}
       </View>
       <Sparkle style={{ top: 4, right: 18 }} />
       <Sparkle style={{ top: 30, left: 6 }} />
@@ -95,11 +182,51 @@ function HandGoldIllustration() {
   );
 }
 const hg = StyleSheet.create({
-  goldBar: { position: 'absolute', top: 16, width: 50, height: 28, backgroundColor: '#eab308', borderRadius: 4, borderWidth: 1, borderColor: '#ca8a04', alignItems: 'flex-start', justifyContent: 'center', paddingLeft: 6, transform: [{ rotate: '-8deg' }], zIndex: 2 },
+  goldBar: {
+    position: 'absolute',
+    top: 16,
+    width: 50,
+    height: 28,
+    backgroundColor: '#eab308',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ca8a04',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 6,
+    transform: [{ rotate: '-8deg' }],
+    zIndex: 2,
+  },
   goldShine: { width: 6, height: 18, backgroundColor: 'rgba(255,255,255,0.35)', borderRadius: 3 },
-  palm: { position: 'absolute', bottom: 26, flexDirection: 'row', alignItems: 'flex-end', gap: 3, width: 92, justifyContent: 'center', zIndex: 1 },
-  finger: { width: 15, borderTopLeftRadius: 8, borderTopRightRadius: 8, borderWidth: 1.5, borderColor: PURPLE, backgroundColor: PURPLE_PALE },
-  wrist: { position: 'absolute', bottom: 10, width: 64, height: 24, borderBottomLeftRadius: 10, borderBottomRightRadius: 10, borderWidth: 1.5, borderColor: PURPLE, backgroundColor: PURPLE_PALE },
+  palm: {
+    position: 'absolute',
+    bottom: 26,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 3,
+    width: 92,
+    justifyContent: 'center',
+    zIndex: 1,
+  },
+  finger: {
+    width: 15,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    backgroundColor: PURPLE_PALE,
+  },
+  wrist: {
+    position: 'absolute',
+    bottom: 10,
+    width: 64,
+    height: 24,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    backgroundColor: PURPLE_PALE,
+  },
   speedLines: { position: 'absolute', left: 2, bottom: 44, gap: 5 },
   speedLine: { height: 1.5, backgroundColor: PURPLE, borderRadius: 2, opacity: 0.45 },
 });
@@ -218,10 +345,7 @@ function VaultIcon() {
       >
         {/* Big combination lock dial — fills most of the icon */}
         <View style={vi.dialOuter}>
-          <LinearGradient
-            colors={['#c8c8c8', '#a8a8a8', '#989898']}
-            style={vi.dialGradient}
-          >
+          <LinearGradient colors={['#c8c8c8', '#a8a8a8', '#989898']} style={vi.dialGradient}>
             {/* Tick marks around the dial */}
             {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg, i) => (
               <View
@@ -230,10 +354,7 @@ function VaultIcon() {
                   vi.tick,
                   i % 3 === 0 ? vi.tickMajor : vi.tickMinor,
                   {
-                    transform: [
-                      { rotate: `${deg}deg` },
-                      { translateY: -(i % 3 === 0 ? 17 : 16) },
-                    ],
+                    transform: [{ rotate: `${deg}deg` }, { translateY: -(i % 3 === 0 ? 17 : 16) }],
                   },
                 ]}
               />
@@ -344,12 +465,18 @@ export default function EGoldScreen() {
           </TouchableOpacity>
           <View style={styles.logoWrap}>
             {[...Array(12)].map((_, i) => (
-              <View key={i} style={[styles.logoDot, {
-                opacity: 0.4 + (i % 4) * 0.15,
-                backgroundColor: PURPLE,
-                width: i % 3 === 0 ? 5 : 4,
-                height: i % 3 === 0 ? 5 : 4,
-              }]} />
+              <View
+                key={i}
+                style={[
+                  styles.logoDot,
+                  {
+                    opacity: 0.4 + (i % 4) * 0.15,
+                    backgroundColor: PURPLE,
+                    width: i % 3 === 0 ? 5 : 4,
+                    height: i % 3 === 0 ? 5 : 4,
+                  },
+                ]}
+              />
             ))}
           </View>
         </View>
@@ -384,11 +511,28 @@ export default function EGoldScreen() {
           {/* Dropdown row */}
           <View style={styles.filterDropdownRow}>
             {[
-              { label: 'Year', chevron: 'chevron-up', onPress: () => setYearFilterOpen(!yearFilterOpen) },
-              { label: 'Order Type', chevron: 'chevron-down', onPress: () => setOrderTypeOpen(!orderTypeOpen) },
-              { label: 'Distributor', chevron: 'chevron-down', onPress: () => setDistributorOpen(!distributorOpen) },
+              {
+                label: 'Year',
+                chevron: 'chevron-up',
+                onPress: () => setYearFilterOpen(!yearFilterOpen),
+              },
+              {
+                label: 'Order Type',
+                chevron: 'chevron-down',
+                onPress: () => setOrderTypeOpen(!orderTypeOpen),
+              },
+              {
+                label: 'Distributor',
+                chevron: 'chevron-down',
+                onPress: () => setDistributorOpen(!distributorOpen),
+              },
             ].map((d) => (
-              <TouchableOpacity key={d.label} style={styles.filterDropdown} onPress={d.onPress} activeOpacity={0.8}>
+              <TouchableOpacity
+                key={d.label}
+                style={styles.filterDropdown}
+                onPress={d.onPress}
+                activeOpacity={0.8}
+              >
                 <AppText style={styles.filterDropdownText}>{d.label}</AppText>
                 <Ionicons name={d.chevron} size={15} color={TEXT_DARK} />
               </TouchableOpacity>
@@ -404,7 +548,9 @@ export default function EGoldScreen() {
                 onPress={() => setSelectedYear(year)}
                 activeOpacity={0.8}
               >
-                <AppText style={[styles.yearPillText, selectedYear === year && styles.yearPillTextActive]}>
+                <AppText
+                  style={[styles.yearPillText, selectedYear === year && styles.yearPillTextActive]}
+                >
                   {year}
                 </AppText>
               </TouchableOpacity>
@@ -422,7 +568,10 @@ export default function EGoldScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.clearBtn}
-              onPress={() => { setSelectedYear(''); setFiltersApplied(false); }}
+              onPress={() => {
+                setSelectedYear('');
+                setFiltersApplied(false);
+              }}
               activeOpacity={0.8}
             >
               <AppText style={styles.clearBtnText}>Clear</AppText>
@@ -436,7 +585,10 @@ export default function EGoldScreen() {
           {filtersApplied && selectedYear ? (
             <TouchableOpacity
               style={styles.activeFilterTag}
-              onPress={() => { setSelectedYear(''); setFiltersApplied(false); }}
+              onPress={() => {
+                setSelectedYear('');
+                setFiltersApplied(false);
+              }}
               activeOpacity={0.8}
             >
               <AppText style={styles.activeFilterTagText}>{selectedYear} ✕</AppText>
@@ -450,7 +602,9 @@ export default function EGoldScreen() {
 
           <View style={styles.stepBlock}>
             <JewelleryBoxIllustration />
-            <AppText style={styles.stepText}>Add to cart any Gold{'\n'}coin(s) or Jewellery</AppText>
+            <AppText style={styles.stepText}>
+              Add to cart any Gold{'\n'}coin(s) or Jewellery
+            </AppText>
           </View>
 
           <ArrowConnector lineHeight={60} />
@@ -488,7 +642,9 @@ export default function EGoldScreen() {
               <View style={styles.wheel} />
             </View>
             <View style={styles.speedLines}>
-              {[24, 16, 20].map((w, i) => <View key={i} style={[styles.speedLine, { width: w }]} />)}
+              {[24, 16, 20].map((w, i) => (
+                <View key={i} style={[styles.speedLine, { width: w }]} />
+              ))}
             </View>
             <Sparkle style={{ top: 2, right: 2 }} />
             <SparkleSmall style={{ top: 4, right: 52 }} />
@@ -519,13 +675,17 @@ export default function EGoldScreen() {
             </View>
           </View>
           <AppText style={styles.redeemInfoText}>
-            You can also Redeem your Gold Balance online as well as offline stores of caratlane &amp; our Jewellery Partner
+            You can also Redeem your Gold Balance online as well as offline stores of caratlane
+            &amp; our Jewellery Partner
           </AppText>
         </View>
       </ScrollView>
 
       {/* ── Floating Support Button ── */}
-      <TouchableOpacity style={[styles.floatingBtn, { bottom: insets.bottom + 16 }]} activeOpacity={0.8}>
+      <TouchableOpacity
+        style={[styles.floatingBtn, { bottom: insets.bottom + 16 }]}
+        activeOpacity={0.8}
+      >
         <Ionicons name="call" size={20} color="#fff" />
       </TouchableOpacity>
     </ScreenLayout>
@@ -538,10 +698,13 @@ const styles = StyleSheet.create({
 
   // Nav
   navBar: {
-    flexDirection: 'row', alignItems: 'center',
-    paddingHorizontal: SPACING.base, paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.base,
+    paddingVertical: 12,
     gap: SPACING.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: BORDER_COLOR,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: BORDER_COLOR,
     backgroundColor: '#fff',
   },
   backBtn: { padding: 4 },
@@ -550,7 +713,9 @@ const styles = StyleSheet.create({
 
   // Welcome
   welcomeRow: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: SPACING.base,
     paddingTop: SPACING.lg,
     paddingBottom: SPACING.lg,
@@ -598,8 +763,11 @@ const styles = StyleSheet.create({
     gap: SPACING.base,
   },
   actionItem: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    borderWidth: 1, borderColor: '#d8c8ff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: '#d8c8ff',
     borderRadius: 10,
     paddingVertical: 18,
     paddingHorizontal: SPACING.base,
@@ -616,15 +784,25 @@ const styles = StyleSheet.create({
   },
   filterDropdownRow: { flexDirection: 'row', gap: SPACING.sm, width: '100%' },
   filterDropdown: {
-    flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    borderWidth: 1, borderColor: BORDER_COLOR, borderRadius: 8,
-    paddingVertical: 10, paddingHorizontal: 10, backgroundColor: '#fff',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
   },
   filterDropdownText: { fontSize: 13, color: TEXT_DARK },
   yearPillsRow: { flexDirection: 'row', gap: SPACING.sm },
   yearPill: {
-    paddingHorizontal: 20, paddingVertical: 8,
-    borderRadius: 20, borderWidth: 1, borderColor: BORDER_COLOR,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
     backgroundColor: '#fff',
   },
   yearPillActive: { backgroundColor: PURPLE, borderColor: PURPLE },
@@ -632,28 +810,42 @@ const styles = StyleSheet.create({
   yearPillTextActive: { color: '#fff', fontWeight: '600' },
   filterBtnRow: { flexDirection: 'row', gap: SPACING.sm, width: '100%' },
   filterBtn: {
-    flex: 1, backgroundColor: PURPLE, borderRadius: 8,
-    paddingVertical: 13, alignItems: 'center',
+    flex: 1,
+    backgroundColor: PURPLE,
+    borderRadius: 8,
+    paddingVertical: 13,
+    alignItems: 'center',
   },
   filterBtnText: { fontSize: 15, color: '#fff', fontWeight: '700' },
   clearBtn: {
-    flex: 1, backgroundColor: '#fff', borderRadius: 8,
-    paddingVertical: 13, alignItems: 'center',
-    borderWidth: 1, borderColor: BORDER_COLOR,
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    paddingVertical: 13,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: BORDER_COLOR,
   },
   clearBtnText: { fontSize: 15, color: TEXT_DARK, fontWeight: '600' },
 
   // No Transaction
   noTransactionRow: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: SPACING.base,
-    paddingTop: SPACING.lg, paddingBottom: SPACING.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: BORDER_COLOR,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: BORDER_COLOR,
   },
   noTransactionText: { fontSize: 14, color: TEXT_MUTED },
   activeFilterTag: {
-    borderWidth: 1, borderColor: '#c4b5fd',
-    borderRadius: 20, paddingHorizontal: 14, paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#c4b5fd',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
     backgroundColor: '#fff',
   },
   activeFilterTagText: { fontSize: 12, color: TEXT_DARK },
@@ -662,37 +854,153 @@ const styles = StyleSheet.create({
   exchangeSection: { backgroundColor: BG_GREY, paddingTop: SPACING.xl, alignItems: 'center' },
   exchangeTitle: { fontSize: 22, fontWeight: '700', color: TEXT_DARK, marginBottom: SPACING.xl },
   stepBlock: { alignItems: 'center', paddingHorizontal: SPACING.base },
-  stepText: { fontSize: 16, color: TEXT_DARK, textAlign: 'center', fontWeight: '400', lineHeight: 24, marginTop: SPACING.sm },
+  stepText: {
+    fontSize: 16,
+    color: TEXT_DARK,
+    textAlign: 'center',
+    fontWeight: '400',
+    lineHeight: 24,
+    marginTop: SPACING.sm,
+  },
 
   // Delivery
   deliverySection: { backgroundColor: BG_GREY, alignItems: 'center', paddingBottom: SPACING.xl },
-  truckScene: { width: 200, height: 110, position: 'relative', alignItems: 'center', justifyContent: 'center', marginVertical: SPACING.base },
+  truckScene: {
+    width: 200,
+    height: 110,
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: SPACING.base,
+  },
   shieldWrap: { position: 'absolute', left: 18, top: 8, zIndex: 2 },
-  shield: { width: 46, height: 46, borderRadius: 23, backgroundColor: '#fff', borderWidth: 2, borderColor: PURPLE, alignItems: 'center', justifyContent: 'center' },
-  truckBody: { flexDirection: 'row', alignItems: 'flex-end', position: 'absolute', right: 10, top: 12 },
-  giftBox: { width: 52, height: 48, backgroundColor: '#fff', borderWidth: 1.5, borderColor: PURPLE, borderRadius: 4, alignItems: 'center', justifyContent: 'center' },
-  truckCab: { width: 38, height: 38, backgroundColor: PURPLE_LIGHT, borderWidth: 1.5, borderColor: PURPLE, borderRadius: 4, alignItems: 'center', justifyContent: 'center', marginLeft: 2 },
+  shield: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: PURPLE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  truckBody: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    position: 'absolute',
+    right: 10,
+    top: 12,
+  },
+  giftBox: {
+    width: 52,
+    height: 48,
+    backgroundColor: '#fff',
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  truckCab: {
+    width: 38,
+    height: 38,
+    backgroundColor: PURPLE_LIGHT,
+    borderWidth: 1.5,
+    borderColor: PURPLE,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 2,
+  },
   wheelsRow: { flexDirection: 'row', position: 'absolute', bottom: 2, right: 12, gap: 30 },
-  wheel: { width: 18, height: 18, borderRadius: 9, backgroundColor: PURPLE, borderWidth: 3, borderColor: '#fff', elevation: 2 },
+  wheel: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: PURPLE,
+    borderWidth: 3,
+    borderColor: '#fff',
+    elevation: 2,
+  },
   speedLines: { position: 'absolute', left: 2, bottom: 22, gap: 4 },
   speedLine: { height: 2, backgroundColor: PURPLE, borderRadius: 2, opacity: 0.4 },
-  deliveryText: { fontSize: 18, color: TEXT_DARK, fontWeight: '600', textAlign: 'center', lineHeight: 28, marginTop: SPACING.sm },
+  deliveryText: {
+    fontSize: 18,
+    color: TEXT_DARK,
+    fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 28,
+    marginTop: SPACING.sm,
+  },
 
   // View Buttons
-  viewBtnsSection: { paddingHorizontal: SPACING.base, paddingTop: SPACING.xl, paddingBottom: SPACING.lg, gap: SPACING.sm, alignItems: 'center', backgroundColor: BG_GREY },
-  viewBtn: { width: '100%', borderWidth: 1.5, borderColor: '#a78bfa', borderRadius: 10, paddingVertical: 15, alignItems: 'center', backgroundColor: '#fff' },
+  viewBtnsSection: {
+    paddingHorizontal: SPACING.base,
+    paddingTop: SPACING.xl,
+    paddingBottom: SPACING.lg,
+    gap: SPACING.sm,
+    alignItems: 'center',
+    backgroundColor: BG_GREY,
+  },
+  viewBtn: {
+    width: '100%',
+    borderWidth: 1.5,
+    borderColor: '#a78bfa',
+    borderRadius: 10,
+    paddingVertical: 15,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
   viewBtnText: { fontSize: 15, color: TEXT_DARK, fontWeight: '700' },
   orText: { fontSize: 15, color: TEXT_DARK, fontWeight: '500', marginVertical: 2 },
 
   // Redeem Info
-  redeemInfoRow: { flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: SPACING.base, paddingTop: SPACING.lg, paddingBottom: SPACING.xl, gap: SPACING.sm, backgroundColor: BG_GREY },
-  redeemIconWrap: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', position: 'relative' },
-  redeemIconBadge: { position: 'absolute', bottom: 0, right: 0, width: 16, height: 16, borderRadius: 8, backgroundColor: PURPLE, alignItems: 'center', justifyContent: 'center' },
+  redeemInfoRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingHorizontal: SPACING.base,
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.xl,
+    gap: SPACING.sm,
+    backgroundColor: BG_GREY,
+  },
+  redeemIconWrap: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  redeemIconBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: PURPLE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   redeemBadgeText: { fontSize: 11, color: '#fff', fontWeight: '700' },
   redeemInfoText: { flex: 1, fontSize: 13, color: TEXT_MUTED, lineHeight: 20 },
 
   // Floating
-  floatingBtn: { position: 'absolute', right: 16, width: 52, height: 52, borderRadius: 26, backgroundColor: PURPLE, alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6, elevation: 6 },
+  floatingBtn: {
+    position: 'absolute',
+    right: 16,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: PURPLE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+  },
 });
 
 // import { AppText } from '@/components/AppText';

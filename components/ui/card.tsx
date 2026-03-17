@@ -1,8 +1,14 @@
 import { SPACING } from '@/constants/index';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-export function Card({ children, style, ...rest }) {
+interface CardProps {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  rest?: any;
+}
+
+export function Card({ children, style, ...rest }: CardProps) {
   return (
     <View style={[styles.card, style]} {...rest}>
       {children}

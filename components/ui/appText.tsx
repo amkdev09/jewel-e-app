@@ -1,24 +1,21 @@
 /**
- * App text component – single place for font family and sizes.
- * Use across the app for consistent typography.
- * Import: import { AppText } from '@/components/AppText';
- *
  * @example
  * <AppText variant="lg" weight="semiBold">Title</AppText>
  * <AppText variant="base" weight="regular">Body</AppText>
  */
 import { theme } from '@/constants/index';
-import React from 'react';
-import { Text } from 'react-native';
+import React, { memo } from 'react';
+import { StyleProp, Text, TextStyle } from 'react-native';
 
-export function AppText({
-  variant = 'base',
-  weight = 'regular',
-  style,
-  children,
-  ...rest
-}) {
+interface AppTextProps {
+  variant?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  weight?: 'regular' | 'semiBold';
+  style?: StyleProp<TextStyle>;
+  children: React.ReactNode;
+  rest?: any;
+}
 
+const AppText = ({ variant = 'base', weight = 'regular', style, children, ...rest }: AppTextProps) => {
   return (
     <Text
       style={[
@@ -33,6 +30,6 @@ export function AppText({
       {children}
     </Text>
   );
-}
+};
 
-export default AppText;
+export default memo(AppText);

@@ -1,4 +1,4 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons } from '@expo/vector-icons';
@@ -63,18 +63,21 @@ export default function AddPaymentMethodScreen() {
     if (!fullName.trim()) e.fullName = 'Full name is required';
     if (!bankName) e.bankName = 'Please select a bank';
     if (!accountNumber.trim()) e.accountNumber = 'Account number is required';
-    else if (!/^\d{9,18}$/.test(accountNumber.trim())) e.accountNumber = 'Enter a valid account number';
+    else if (!/^\d{9,18}$/.test(accountNumber.trim()))
+      e.accountNumber = 'Enter a valid account number';
     if (!reAccountNumber.trim()) e.reAccountNumber = 'Please re-enter account number';
     else if (accountNumber !== reAccountNumber) e.reAccountNumber = 'Account numbers do not match';
     if (!ifscCode.trim()) e.ifscCode = 'IFSC code is required';
-    else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscCode.trim().toUpperCase())) e.ifscCode = 'Enter a valid IFSC code';
+    else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifscCode.trim().toUpperCase()))
+      e.ifscCode = 'Enter a valid IFSC code';
     return e;
   };
 
   const validateUpi = () => {
     const e = {};
     if (!upiId.trim()) e.upiId = 'UPI ID is required';
-    else if (!/^[\w.\-_]{3,}@[a-zA-Z]{3,}$/.test(upiId.trim())) e.upiId = 'Enter a valid UPI ID (e.g. name@upi)';
+    else if (!/^[\w.\-_]{3,}@[a-zA-Z]{3,}$/.test(upiId.trim()))
+      e.upiId = 'Enter a valid UPI ID (e.g. name@upi)';
     return e;
   };
 
@@ -104,7 +107,11 @@ export default function AddPaymentMethodScreen() {
       >
         {/* ── Header ── */}
         <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backBtn}
+            activeOpacity={0.7}
+          >
             <Ionicons name="chevron-back" size={26} color={TEXT_DARK} />
           </TouchableOpacity>
           <AppText style={styles.headerTitle}>Manage Refunds</AppText>
@@ -114,7 +121,8 @@ export default function AddPaymentMethodScreen() {
         {/* ── Info Banner ── */}
         <View style={styles.infoBanner}>
           <AppText style={styles.infoText}>
-            Sharing bank account/UPI details is mandatory to complete PoP{'\n'}instalment/Refund flow as per guidelines.
+            Sharing bank account/UPI details is mandatory to complete PoP{'\n'}instalment/Refund
+            flow as per guidelines.
           </AppText>
         </View>
 
@@ -129,7 +137,10 @@ export default function AddPaymentMethodScreen() {
             {/* Radio row — tapping toggles to bank */}
             <TouchableOpacity
               style={styles.radioRow}
-              onPress={() => { setActiveTab('bank'); setBankDropdownOpen(false); }}
+              onPress={() => {
+                setActiveTab('bank');
+                setBankDropdownOpen(false);
+              }}
               activeOpacity={0.8}
             >
               <View style={[styles.radioOuter, activeTab === 'bank' && styles.radioOuterActive]}>
@@ -145,7 +156,10 @@ export default function AddPaymentMethodScreen() {
                 <InputField
                   placeholder="Full Name"
                   value={fullName}
-                  onChangeText={(v) => { setFullName(v); clearError('fullName'); }}
+                  onChangeText={(v) => {
+                    setFullName(v);
+                    clearError('fullName');
+                  }}
                   autoCapitalize="words"
                   error={errors.fullName}
                 />
@@ -153,7 +167,11 @@ export default function AddPaymentMethodScreen() {
                 {/* Bank Name Dropdown */}
                 <View style={styles.fieldWrap}>
                   <TouchableOpacity
-                    style={[styles.inputBox, styles.dropdownBox, errors.bankName && styles.inputBoxError]}
+                    style={[
+                      styles.inputBox,
+                      styles.dropdownBox,
+                      errors.bankName && styles.inputBoxError,
+                    ]}
                     onPress={() => setBankDropdownOpen(!bankDropdownOpen)}
                     activeOpacity={0.8}
                   >
@@ -173,14 +191,24 @@ export default function AddPaymentMethodScreen() {
                         {BANK_LIST.map((b) => (
                           <TouchableOpacity
                             key={b}
-                            style={[styles.dropdownItem, bankName === b && styles.dropdownItemActive]}
+                            style={[
+                              styles.dropdownItem,
+                              bankName === b && styles.dropdownItemActive,
+                            ]}
                             onPress={() => selectBank(b)}
                             activeOpacity={0.7}
                           >
-                            <AppText style={[styles.dropdownItemText, bankName === b && styles.dropdownItemTextActive]}>
+                            <AppText
+                              style={[
+                                styles.dropdownItemText,
+                                bankName === b && styles.dropdownItemTextActive,
+                              ]}
+                            >
                               {b}
                             </AppText>
-                            {bankName === b && <Ionicons name="checkmark" size={16} color={PURPLE} />}
+                            {bankName === b && (
+                              <Ionicons name="checkmark" size={16} color={PURPLE} />
+                            )}
                           </TouchableOpacity>
                         ))}
                       </ScrollView>
@@ -192,7 +220,10 @@ export default function AddPaymentMethodScreen() {
                 <InputField
                   placeholder="Account Number"
                   value={accountNumber}
-                  onChangeText={(v) => { setAccountNumber(v); clearError('accountNumber'); }}
+                  onChangeText={(v) => {
+                    setAccountNumber(v);
+                    clearError('accountNumber');
+                  }}
                   keyboardType="numeric"
                   secureTextEntry
                   error={errors.accountNumber}
@@ -202,7 +233,10 @@ export default function AddPaymentMethodScreen() {
                 <InputField
                   placeholder="Re-enter Account Number"
                   value={reAccountNumber}
-                  onChangeText={(v) => { setReAccountNumber(v); clearError('reAccountNumber'); }}
+                  onChangeText={(v) => {
+                    setReAccountNumber(v);
+                    clearError('reAccountNumber');
+                  }}
                   keyboardType="numeric"
                   error={errors.reAccountNumber}
                 />
@@ -211,7 +245,10 @@ export default function AddPaymentMethodScreen() {
                 <InputField
                   placeholder="IFSC Code"
                   value={ifscCode}
-                  onChangeText={(v) => { setIfscCode(v.toUpperCase()); clearError('ifscCode'); }}
+                  onChangeText={(v) => {
+                    setIfscCode(v.toUpperCase());
+                    clearError('ifscCode');
+                  }}
                   autoCapitalize="characters"
                   maxLength={11}
                   error={errors.ifscCode}
@@ -225,7 +262,10 @@ export default function AddPaymentMethodScreen() {
           <View style={styles.sectionCard}>
             <TouchableOpacity
               style={styles.radioRow}
-              onPress={() => { setActiveTab('upi'); setBankDropdownOpen(false); }}
+              onPress={() => {
+                setActiveTab('upi');
+                setBankDropdownOpen(false);
+              }}
               activeOpacity={0.8}
             >
               <View style={[styles.radioOuter, activeTab === 'upi' && styles.radioOuterActive]}>
@@ -239,7 +279,10 @@ export default function AddPaymentMethodScreen() {
                 <InputField
                   placeholder="Beneficiary UPI ID"
                   value={upiId}
-                  onChangeText={(v) => { setUpiId(v); clearError('upiId'); }}
+                  onChangeText={(v) => {
+                    setUpiId(v);
+                    clearError('upiId');
+                  }}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   error={errors.upiId}

@@ -1,4 +1,4 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { useAuthStore } from '@/src/store/auth.store';
@@ -6,12 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HEADER_PURPLE = '#4c1d95';
@@ -114,38 +109,45 @@ export default function ProfileScreen() {
         {/* Top Header - dark purple */}
         <View style={[styles.header, { paddingTop: insets.top + SPACING.sm }]}>
           <View style={styles.headerLeft}>
-            <AppText variant="xl" weight="semiBold" style={styles.greeting}>Hi, {displayName}</AppText>
+            <AppText variant="xl" weight="semiBold" style={styles.greeting}>
+              Hi, {displayName}
+            </AppText>
             <AppText variant="sm" weight="regular" style={styles.profilePrompt}>
               Complete your profile and get 500 xClusive points
             </AppText>
             <View style={styles.progressWrap}>
               <View style={styles.progressBg}>
-                <View
-                  style={[styles.progressFill, { width: `${PROFILE_PROGRESS * 100}%` }]}
-                />
+                <View style={[styles.progressFill, { width: `${PROFILE_PROGRESS * 100}%` }]} />
               </View>
-              <AppText variant="sm" weight="semiBold" style={styles.progressLabel}>32%</AppText>
+              <AppText variant="sm" weight="semiBold" style={styles.progressLabel}>
+                32%
+              </AppText>
             </View>
           </View>
-          <TouchableOpacity
-            style={styles.completeBtn}
-            activeOpacity={0.8}
-          >
-            <AppText variant="sm" weight="semiBold" style={styles.completeBtnText}>COMPLETE</AppText>
+          <TouchableOpacity style={styles.completeBtn} activeOpacity={0.8}>
+            <AppText variant="sm" weight="semiBold" style={styles.completeBtnText}>
+              COMPLETE
+            </AppText>
           </TouchableOpacity>
         </View>
 
         {/* xClusive CLUB banner */}
         <TouchableOpacity style={styles.clubBanner} activeOpacity={0.9}>
           <View style={styles.clubBannerLeft}>
-            <AppText variant="lg" weight="semiBold" style={styles.clubTitle}>xClusive</AppText>
+            <AppText variant="lg" weight="semiBold" style={styles.clubTitle}>
+              xClusive
+            </AppText>
             <View style={styles.clubBadge}>
-              <AppText variant="xs" weight="semiBold" style={styles.clubBadgeText}>CLUB</AppText>
+              <AppText variant="xs" weight="semiBold" style={styles.clubBadgeText}>
+                CLUB
+              </AppText>
             </View>
           </View>
           <View style={styles.clubBannerRight}>
             <View style={styles.coinIcon}>
-              <AppText variant="base" weight="semiBold" style={styles.coinText}>0</AppText>
+              <AppText variant="base" weight="semiBold" style={styles.coinText}>
+                0
+              </AppText>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#fff" />
           </View>
@@ -154,19 +156,17 @@ export default function ProfileScreen() {
         {/* Action cards - Orders, Treasure Chest, Try At Home */}
         <View style={styles.actionRow}>
           {ACTION_CARDS.map((card) => (
-            <TouchableOpacity
-              key={card.id}
-              style={styles.actionCard}
-              activeOpacity={0.8}
-            >
-              <Ionicons
-                name={card.icon}
-                size={28}
-                color={card.color}
-                style={styles.actionIcon}
-              />
-              <AppText variant="base" weight="semiBold" style={styles.actionTitle}>{card.title}</AppText>
-              <AppText variant="sm" weight="regular" style={styles.actionSubtitle} numberOfLines={2}>
+            <TouchableOpacity key={card.id} style={styles.actionCard} activeOpacity={0.8}>
+              <Ionicons name={card.icon} size={28} color={card.color} style={styles.actionIcon} />
+              <AppText variant="base" weight="semiBold" style={styles.actionTitle}>
+                {card.title}
+              </AppText>
+              <AppText
+                variant="sm"
+                weight="regular"
+                style={styles.actionSubtitle}
+                numberOfLines={2}
+              >
                 {card.subtitle}
               </AppText>
             </TouchableOpacity>
@@ -174,22 +174,23 @@ export default function ProfileScreen() {
         </View>
 
         {/* Special offers for special roles */}
-        <LinearGradient
-          colors={['#ede9fe', '#f5f3ff', '#fff']}
-          style={styles.specialSection}
-        >
+        <LinearGradient colors={['#ede9fe', '#f5f3ff', '#fff']} style={styles.specialSection}>
           <View style={styles.specialContent}>
             <View style={styles.specialTextWrap}>
               <AppText variant="lg" weight="semiBold" style={styles.specialTitle}>
                 Special offers for special roles!
               </AppText>
-              <AppText variant="base" weight="regular" style={styles.specialSubtitle}>Tell us what you do</AppText>
+              <AppText variant="base" weight="regular" style={styles.specialSubtitle}>
+                Tell us what you do
+              </AppText>
               <TouchableOpacity
                 style={styles.occupationDropdown}
                 onPress={() => setOccupationOpen(!occupationOpen)}
                 activeOpacity={0.8}
               >
-                <AppText variant="base" weight="regular" style={styles.occupationPlaceholder}>Occupation</AppText>
+                <AppText variant="base" weight="regular" style={styles.occupationPlaceholder}>
+                  Occupation
+                </AppText>
                 <Ionicons name="chevron-down" size={20} color={TEXT_MUTED} />
               </TouchableOpacity>
             </View>
@@ -213,33 +214,36 @@ export default function ProfileScreen() {
               <View style={styles.listItemIconWrap}>
                 {item.isEGold ? (
                   <View style={styles.egoldIcon}>
-                    <AppText variant="xs" weight="semiBold" style={styles.egoldIconText}>eGold</AppText>
+                    <AppText variant="xs" weight="semiBold" style={styles.egoldIconText}>
+                      eGold
+                    </AppText>
                   </View>
                 ) : (
-                  <Ionicons
-                    name={item.icon}
-                    size={24}
-                    color="#7c3aed"
-                  />
+                  <Ionicons name={item.icon} size={24} color="#7c3aed" />
                 )}
               </View>
               <View style={styles.listItemText}>
-                <AppText variant="base" weight="semiBold" style={styles.listItemTitle}>{item.title}</AppText>
-                <AppText variant="sm" weight="regular" style={styles.listItemSubtitle} numberOfLines={2}>
+                <AppText variant="base" weight="semiBold" style={styles.listItemTitle}>
+                  {item.title}
+                </AppText>
+                <AppText
+                  variant="sm"
+                  weight="regular"
+                  style={styles.listItemSubtitle}
+                  numberOfLines={2}
+                >
                   {item.subtitle}
                 </AppText>
               </View>
-              <Ionicons
-                name="chevron-forward"
-                size={20}
-                color={TEXT_MUTED}
-              />
+              <Ionicons name="chevron-forward" size={20} color={TEXT_MUTED} />
             </TouchableOpacity>
           ))}
         </View>
 
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
-          <AppText variant="base" weight="semiBold" style={styles.logoutText}>Sign out</AppText>
+          <AppText variant="base" weight="semiBold" style={styles.logoutText}>
+            Sign out
+          </AppText>
         </TouchableOpacity>
       </ScrollView>
     </ScreenLayout>

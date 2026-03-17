@@ -2,17 +2,12 @@
  * Empty shopping bag screen – matches CaratLane-style design.
  * Shown when bag icon on home is tapped.
  */
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { theme } from '@/constants/index';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const H_PAD = theme?.spacing?.base;
@@ -68,11 +63,7 @@ export default function BagScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + theme?.spacing?.sm }]}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.headerBtn}
-          hitSlop={12}
-        >
+        <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn} hitSlop={12}>
           <Ionicons name="chevron-back" size={24} color={PRIMARY_PURPLE} />
         </TouchableOpacity>
 
@@ -90,10 +81,7 @@ export default function BagScreen() {
             <AppText
               variant="sm"
               weight="semiBold"
-              style={[
-                styles.segmentText,
-                activeTab === 'bag' && styles.segmentTextSelected,
-              ]}
+              style={[styles.segmentText, activeTab === 'bag' && styles.segmentTextSelected]}
             >
               Shopping Bag (0)
             </AppText>
@@ -135,7 +123,10 @@ export default function BagScreen() {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + theme?.spacing?.xxl }]}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingBottom: insets.bottom + theme?.spacing?.xxl },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         {/* Empty state */}
@@ -144,7 +135,7 @@ export default function BagScreen() {
             There is nothing here!
           </AppText>
           <AppText variant="base" weight="regular" style={styles.emptySubtitle}>
-            Let's do some retail therapy.
+            Let&apos;s do some retail therapy.
           </AppText>
           <View style={styles.illustrationSpacer} />
           <BagEmptyIllustration />
@@ -152,33 +143,23 @@ export default function BagScreen() {
 
         {/* CARATLANE ASSURITY */}
         <View style={styles.assuranceSection}>
-          <AppText
-            variant="base"
-            weight="semiBold"
-            style={styles.assuranceTitle}
-          >
+          <AppText variant="base" weight="semiBold" style={styles.assuranceTitle}>
             CARATLANE ASSURITY
           </AppText>
           <View style={styles.assuranceRow}>
             {ASSURANCE_ITEMS.map((item) => (
               <View key={item.id} style={styles.assuranceItem}>
                 <View style={styles.assuranceIconWrap}>
-                  <Ionicons
-                    name={item.icon}
-                    size={28}
-                    color={PRIMARY_PURPLE}
-                  />
+                  <Ionicons name={item.icon} size={28} color={PRIMARY_PURPLE} />
                   {item.showBadge && (
                     <View style={styles.assuranceBadge}>
-                      <AppText variant="xs" weight="semiBold" style={styles.assuranceBadgeText}>1</AppText>
+                      <AppText variant="xs" weight="semiBold" style={styles.assuranceBadgeText}>
+                        1
+                      </AppText>
                     </View>
                   )}
                 </View>
-                <AppText
-                  variant="xs"
-                  weight="regular"
-                  style={styles.assuranceLabel}
-                >
+                <AppText variant="xs" weight="regular" style={styles.assuranceLabel}>
                   {item.label}
                 </AppText>
               </View>
@@ -187,11 +168,7 @@ export default function BagScreen() {
         </View>
 
         {/* CTA button */}
-        <TouchableOpacity
-          style={styles.ctaBtn}
-          activeOpacity={0.85}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.ctaBtn} activeOpacity={0.85} onPress={() => router.back()}>
           <AppText variant="base" weight="semiBold" style={styles.ctaBtnText}>
             START SHOPPING
           </AppText>

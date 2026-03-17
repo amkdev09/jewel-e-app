@@ -1,17 +1,11 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { theme } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -69,7 +63,10 @@ function WishlistProductCard({ product }) {
     <TouchableOpacity style={[styles.productCard, { width: CARD_W }]} activeOpacity={0.9}>
       <View style={styles.cardImageWrap}>
         <Image source={{ uri: image }} style={styles.cardImage} contentFit="cover" />
-        <TouchableOpacity style={styles.cardHeartBtn} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <TouchableOpacity
+          style={styles.cardHeartBtn}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
           <Ionicons name="heart-outline" size={20} color={HEADER_ICON} />
         </TouchableOpacity>
       </View>

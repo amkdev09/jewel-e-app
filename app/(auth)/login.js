@@ -1,5 +1,6 @@
-import { AppText } from '@/components/AppText';
-import { theme } from '@/constants/index';
+import PasswordInput from '@/components/ui/passwordInput';
+import AppText from '@/components/ui/appText';
+import { APP_COLORS, theme } from '@/constants/index';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,14 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Linking from 'expo-linking';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-  Alert,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 const PURPLE_DARK = '#5b21b6';
 const PURPLE_LIGHT = '#a78bfa';
@@ -25,31 +19,55 @@ const BUTTON_GRAY = '#9ca3af';
 const GREEN_WHATSAPP = '#25d366';
 const FACEBOOK_BLUE = '#1877f2';
 
+const STEP_IDENTIFIER = 1;
+const STEP_PASSWORD = 2;
+
 export default function LoginScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const login = useAuthStore((s) => s.login);
-  const [mobileOrEmail, setMobileOrEmail] = useState('');
+  const [step, setStep] = useState(STEP_IDENTIFIER);
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleContinue = () => {
-    if (!mobileOrEmail.trim()) {
+    if (!identifier.trim()) {
       Alert.alert('Error', 'Please enter mobile number or email');
       return;
     }
     if (!agreed) {
-      Alert.alert('Terms', 'Please acknowledge that you are at least 18 and agree to T&C and Privacy Policy.');
+      Alert.alert(
+        'Terms',
+        'Please acknowledge that you are at least 18 and agree to T&C and Privacy Policy.'
+      );
+      return;
+    }
+    setStep(STEP_PASSWORD);
+  };
+
+  const handleLogin = async () => {
+    if (!password.trim()) {
+      Alert.alert('Error', 'Please enter your password');
       return;
     }
     setLoading(true);
-    // await login(mobileOrEmail.trim(), ...);
+    const result = await login(identifier.trim(), password.trim());
     setLoading(false);
-    router.replace('/(tabs)/home');
+    if (result?.success) {
+      router.replace('/(tabs)/home');
+    } else {
+      Alert.alert('Login failed', result?.message || 'Invalid credentials. Please try again.');
+    }
   };
 
-  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => { });
-  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => { });
+  const handleBackFromPassword = () => {
+    setStep(STEP_IDENTIFIER);
+    setPassword('');
+  };
+
+  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => {});
+  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => {});
 
   return (
     <AuthLayout scroll={true}>
@@ -57,7 +75,7 @@ export default function LoginScreen() {
         {/* Back arrow */}
         <TouchableOpacity
           style={styles.backBtn}
-          onPress={() => router.back()}
+          onPress={step === STEP_PASSWORD ? handleBackFromPassword : () => router.back()}
           activeOpacity={0.7}
         >
           <Ionicons name="arrow-back" size={24} color={TEXT_DARK} />
@@ -75,58 +93,105 @@ export default function LoginScreen() {
               <Ionicons name="key" size={48} color="#fff" />
             </LinearGradient>
           </View>
-          <AppText variant="base" weight="semiBold" style={styles.title}>Welcome back!</AppText>
+          <AppText variant="xl" weight="semiBold" style={styles.title}>
+            Welcome back!
+          </AppText>
           <AppText variant="base" weight="regular" style={styles.desc}>
-            Login to unlock best prices and become an insider for our exclusive launches offers. Complete your profile and get ₹500 worth of xCLusive Points.
+            Login to unlock best prices and become an insider for our exclusive launches offers.
+            Complete your profile and get ₹500 worth of xCLusive Points.
           </AppText>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Enter Mobile Number or Email"
-            placeholderTextColor={TEXT_MUTED}
-            value={mobileOrEmail}
-            onChangeText={setMobileOrEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            editable={!loading}
-          />
-
-          <TouchableOpacity
-            style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
-            onPress={handleContinue}
-            disabled={loading}
-            activeOpacity={0.8}
-          >
-            <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>CONTINUE TO LOGIN</AppText>
-          </TouchableOpacity>
-
-          {/* T&C checkbox row */}
-          <View style={styles.tcRow}>
-            <TouchableOpacity
-              style={[styles.checkbox, agreed && styles.checkboxChecked]}
-              onPress={() => setAgreed(!agreed)}
-              activeOpacity={0.7}
-            >
-              {agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
-            </TouchableOpacity>
-            <View style={styles.tcTextWrap}>
-              <AppText variant="xs" weight="regular" style={styles.tcText}>
-                By continuing you acknowledge that you are at least 18 years old and have read and agree to CaratLane's{' '}
-              </AppText>
-              <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
-                <AppText variant="xs" weight="semiBold" style={styles.tcLink}>T&C</AppText>
+          {step === STEP_IDENTIFIER ? (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter Mobile Number or Email"
+                placeholderTextColor={TEXT_MUTED}
+                value={identifier}
+                onChangeText={setIdentifier}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                editable={!loading}
+              />
+              <TouchableOpacity
+                style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
+                onPress={handleContinue}
+                disabled={loading}
+                activeOpacity={0.8}
+              >
+                <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
+                  CONTINUE
+                </AppText>
               </TouchableOpacity>
-              <AppText variant="xs" weight="regular" style={styles.tcText}> </AppText>
-              <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
-                <AppText variant="xs" weight="semiBold" style={styles.tcLink}>Privacy Policy.</AppText>
+            </>
+          ) : (
+            <>
+              <View style={styles.identifierRow}>
+                <AppText variant="sm" weight="medium" style={styles.identifierLabel}>
+                  Logging in as
+                </AppText>
+                <AppText variant="sm" weight="semiBold" style={styles.identifierValue} numberOfLines={1}>
+                  {identifier}
+                </AppText>
+              </View>
+              <PasswordInput
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                containerStyle={styles.passwordInput}
+                editable={!loading}
+              />
+              <TouchableOpacity
+                style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
+                onPress={handleLogin}
+                disabled={loading}
+                activeOpacity={0.8}
+              >
+                <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
+                  {loading ? 'LOGGING IN...' : 'LOGIN'}
+                </AppText>
               </TouchableOpacity>
+            </>
+          )}
+
+          {/* T&C checkbox row - only on identifier step */}
+          {step === STEP_IDENTIFIER && (
+            <View style={styles.tcRow}>
+              <TouchableOpacity
+                style={[styles.checkbox, agreed && styles.checkboxChecked]}
+                onPress={() => setAgreed(!agreed)}
+                activeOpacity={0.7}
+              >
+                {agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
+              </TouchableOpacity>
+              <View style={styles.tcTextWrap}>
+                <AppText variant="xs" weight="regular" style={styles.tcText}>
+                  By continuing you acknowledge that you are at least 18 years old and have read and
+                  agree to CaratLane&apos;s{' '}
+                </AppText>
+                <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
+                  <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                    T&C
+                  </AppText>
+                </TouchableOpacity>
+                <AppText variant="xs" weight="regular" style={styles.tcText}>
+                  {' '}
+                </AppText>
+                <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
+                  <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                    Privacy Policy.
+                  </AppText>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          )}
 
           {/* OR divider */}
           <View style={styles.orWrap}>
             <View style={styles.orLine} />
-            <AppText variant="sm" weight="medium" style={styles.orText}>OR</AppText>
+            <AppText variant="sm" weight="medium" style={styles.orText}>
+              OR
+            </AppText>
             <View style={styles.orLine} />
           </View>
 
@@ -136,8 +201,10 @@ export default function LoginScreen() {
             activeOpacity={0.8}
             onPress={() => router.replace('/(tabs)/home')}
           >
-            <Ionicons name="logo-whatsapp" size={24} color="#fff" />
-            <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>LOGIN WITH WHATSAPP</AppText>
+            <Ionicons name="logo-whatsapp" size={24} color={GREEN_WHATSAPP} />
+            <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>
+              LOGIN WITH WHATSAPP
+            </AppText>
           </TouchableOpacity>
 
           {/* Google & Facebook */}
@@ -154,16 +221,20 @@ export default function LoginScreen() {
               activeOpacity={0.8}
               onPress={() => router.replace('/(tabs)/home')}
             >
-              <Ionicons name="logo-facebook" size={28} color="#fff" />
+              <Ionicons name="logo-facebook" size={28} color={FACEBOOK_BLUE} />
             </TouchableOpacity>
           </View>
 
           {/* Sign up link */}
           <View style={styles.footer}>
-            <AppText variant="base" weight="regular" style={styles.footerText}>New to CaratLane?</AppText>
+            <AppText variant="base" weight="regular" style={styles.footerText}>
+              New to CaratLane?
+            </AppText>
             <Link href="/(auth)/register" asChild>
               <TouchableOpacity activeOpacity={0.7}>
-                <AppText variant="base" weight="semiBold" style={styles.createAccountLink}>Create Account</AppText>
+                <AppText variant="base" weight="semiBold" style={styles.createAccountLink}>
+                  Create Account
+                </AppText>
               </TouchableOpacity>
             </Link>
           </View>
@@ -181,15 +252,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     justifyContent: 'center',
-    marginBottom: theme?.spacing?.xs,
+    marginBottom: theme?.spacing?.xl,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: theme?.spacing?.xxl,
+    paddingBottom: theme?.spacing?.xl,
   },
   iconWrap: {
     alignItems: 'center',
-    marginBottom: theme?.spacing?.lg,
+    marginBottom: theme?.spacing?.md,
   },
   keyholeCircle: {
     width: 88,
@@ -200,14 +271,11 @@ const styles = StyleSheet.create({
   },
   title: {
     color: PURPLE_DARK,
-    marginBottom: theme?.spacing?.sm,
     textAlign: 'center',
   },
   desc: {
-    fontSize: 14,
     color: TEXT_MUTED,
-    lineHeight: 22,
-    marginBottom: theme?.spacing?.xl,
+    marginVertical: theme?.spacing?.xxl,
     textAlign: 'center',
   },
   input: {
@@ -216,9 +284,21 @@ const styles = StyleSheet.create({
     borderColor: BORDER_GRAY,
     borderRadius: 10,
     paddingHorizontal: theme?.spacing?.base,
-    marginBottom: theme?.spacing?.base,
-    fontSize: 16,
+    marginVertical: theme?.spacing?.xxl,
     color: TEXT_DARK,
+  },
+  identifierRow: {
+    marginBottom: theme?.spacing?.sm,
+  },
+  identifierLabel: {
+    color: TEXT_MUTED,
+    marginBottom: 2,
+  },
+  identifierValue: {
+    color: TEXT_DARK,
+  },
+  passwordInput: {
+    marginVertical: theme?.spacing?.base,
   },
   continueBtn: {
     height: 48,
@@ -226,7 +306,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: theme?.spacing?.lg,
+    marginBottom: theme?.spacing?.xxxl,
   },
   continueBtnDisabled: {
     opacity: 0.6,
@@ -240,7 +320,7 @@ const styles = StyleSheet.create({
   tcRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: theme?.spacing?.xl,
+    marginVertical: theme?.spacing?.xxl,
     gap: theme?.spacing?.sm,
   },
   checkbox: {
@@ -272,13 +352,12 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   tcLink: {
-    color: PURPLE_DARK,
-    fontWeight: '600',
+    color: APP_COLORS.pink,
   },
   orWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme?.spacing?.lg,
+    marginVertical: theme?.spacing?.xxl,
     gap: theme?.spacing?.sm,
   },
   orLine: {
@@ -287,7 +366,6 @@ const styles = StyleSheet.create({
     backgroundColor: BORDER_GRAY,
   },
   orText: {
-    fontSize: 13,
     color: TEXT_MUTED,
     fontWeight: '500',
   },
@@ -296,36 +374,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 48,
-    backgroundColor: GREEN_WHATSAPP,
+    backgroundColor: '#e6f6e6',
     borderRadius: 10,
+    borderWidth: 1,
+    borderColor: GREEN_WHATSAPP,
     marginBottom: theme?.spacing?.base,
-    gap: theme?.spacing?.sm,
+    gap: theme?.spacing?.base,
   },
   whatsappBtnText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    color: APP_COLORS.primary.a,
   },
   socialRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: theme?.spacing?.lg,
-    marginBottom: theme?.spacing?.xxl,
+    gap: theme?.spacing?.base,
+    marginVertical: theme?.spacing?.xxl,
   },
   socialBtn: {
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: BORDER_GRAY,
+    backgroundColor: '#fff4eb',
     alignItems: 'center',
     justifyContent: 'center',
   },
   facebookBtn: {
-    backgroundColor: FACEBOOK_BLUE,
-    borderColor: FACEBOOK_BLUE,
+    backgroundColor: '#ebebff',
   },
   footer: {
     flexDirection: 'row',
@@ -338,8 +412,6 @@ const styles = StyleSheet.create({
     color: TEXT_MUTED,
   },
   createAccountLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: PURPLE_DARK,
+    color: APP_COLORS.pink,
   },
 });

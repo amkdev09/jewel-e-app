@@ -1,17 +1,11 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -25,10 +19,18 @@ const TEXT_MUTED = '#6b7280';
 const TOP_CATEGORIES = [
   { id: 'rings', label: 'Rings', image: 'https://picsum.photos/seed/ring1/200/200' },
   { id: 'earrings', label: 'Earrings', image: 'https://picsum.photos/seed/ear1/200/200' },
-  { id: 'bracelets', label: 'Bracelets & Bangles', image: 'https://picsum.photos/seed/brace1/200/200' },
+  {
+    id: 'bracelets',
+    label: 'Bracelets & Bangles',
+    image: 'https://picsum.photos/seed/brace1/200/200',
+  },
   { id: 'solitaires', label: 'Solitaires', image: 'https://picsum.photos/seed/solitaire/200/200' },
   { id: '22kt', label: '22KT', image: 'https://picsum.photos/seed/22kt1/200/200' },
-  { id: 'silver-shaya', label: 'Silver by Shaya', image: 'https://picsum.photos/seed/silvershaya/200/200' },
+  {
+    id: 'silver-shaya',
+    label: 'Silver by Shaya',
+    image: 'https://picsum.photos/seed/silvershaya/200/200',
+  },
   { id: 'mangalsutra', label: 'Mangalsutra', image: 'https://picsum.photos/seed/mangal/200/200' },
   { id: 'necklaces', label: 'Necklaces', image: 'https://picsum.photos/seed/neck1/200/200' },
 ];
@@ -79,10 +81,7 @@ export default function CategoriesScreen() {
             <AppText
               variant="base"
               weight={activeTab === tab ? 'semiBold' : 'regular'}
-              style={[
-                styles.tabText,
-                activeTab === tab && styles.tabTextActive,
-              ]}
+              style={[styles.tabText, activeTab === tab && styles.tabTextActive]}
             >
               {tab}
             </AppText>
@@ -97,21 +96,21 @@ export default function CategoriesScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Top Categories */}
-        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>Top Categories</AppText>
+        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>
+          Top Categories
+        </AppText>
         <View style={styles.categoryGrid}>
           {TOP_CATEGORIES.map((cat) => (
-            <TouchableOpacity
-              key={cat.id}
-              style={styles.categoryCard}
-              activeOpacity={0.8}
-            >
+            <TouchableOpacity key={cat.id} style={styles.categoryCard} activeOpacity={0.8}>
               <View style={styles.categoryCardImageWrap}>
-                <Image
-                  source={{ uri: cat.image }}
-                  style={styles.categoryCardImage}
-                />
+                <Image source={{ uri: cat.image }} style={styles.categoryCardImage} />
               </View>
-              <AppText variant="base" weight="regular" style={styles.categoryCardLabel} numberOfLines={2}>
+              <AppText
+                variant="base"
+                weight="regular"
+                style={styles.categoryCardLabel}
+                numberOfLines={2}
+              >
                 {cat.label}
               </AppText>
               <Ionicons
@@ -126,8 +125,20 @@ export default function CategoriesScreen() {
 
         {/* Friends | Silver */}
         <View style={styles.sectionTitleRow}>
-          <AppText variant="xl" weight="semiBold" style={[styles.sectionTitle, styles.sectionTitleInRow]}>Friends </AppText>
-          <AppText variant="xl" weight="semiBold" style={[styles.sectionTitle, styles.sectionTitleBold]}>| Silver</AppText>
+          <AppText
+            variant="xl"
+            weight="semiBold"
+            style={[styles.sectionTitle, styles.sectionTitleInRow]}
+          >
+            Friends{' '}
+          </AppText>
+          <AppText
+            variant="xl"
+            weight="semiBold"
+            style={[styles.sectionTitle, styles.sectionTitleBold]}
+          >
+            | Silver
+          </AppText>
         </View>
         <View style={styles.bannerWrap}>
           <View style={[styles.bannerCard, { width: BANNER_CARD_W }]}>
@@ -139,10 +150,18 @@ export default function CategoriesScreen() {
             />
             <View style={styles.bannerContent}>
               <View style={styles.bannerTextWrap}>
-                <AppText variant="2xl" weight="semiBold" style={styles.bannerTitle}>SHAYA</AppText>
-                <AppText variant="xl" weight="semiBold" style={styles.bannerSub}>DIAMONDS</AppText>
-                <AppText variant="base" weight="regular" style={styles.bannerScript}>Natural Diamonds</AppText>
-                <AppText variant="sm" weight="regular" style={styles.bannerMeta}>in 925 Silver</AppText>
+                <AppText variant="2xl" weight="semiBold" style={styles.bannerTitle}>
+                  SHAYA
+                </AppText>
+                <AppText variant="xl" weight="semiBold" style={styles.bannerSub}>
+                  DIAMONDS
+                </AppText>
+                <AppText variant="base" weight="regular" style={styles.bannerScript}>
+                  Natural Diamonds
+                </AppText>
+                <AppText variant="sm" weight="regular" style={styles.bannerMeta}>
+                  in 925 Silver
+                </AppText>
               </View>
               <View style={styles.bannerDecoration}>
                 <Image
@@ -159,21 +178,17 @@ export default function CategoriesScreen() {
         </View>
 
         {/* Most Browsed */}
-        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>Most Browsed</AppText>
+        <AppText variant="xl" weight="semiBold" style={styles.sectionTitle}>
+          Most Browsed
+        </AppText>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.mostBrowsedScroll}
         >
           {MOST_BROWSED.map((item) => (
-            <View
-              key={item.id}
-              style={[styles.mostBrowsedCard, { width: MOST_BROWSED_CARD_W }]}
-            >
-              <Image
-                source={{ uri: item.image }}
-                style={styles.mostBrowsedImage}
-              />
+            <View key={item.id} style={[styles.mostBrowsedCard, { width: MOST_BROWSED_CARD_W }]}>
+              <Image source={{ uri: item.image }} style={styles.mostBrowsedImage} />
             </View>
           ))}
         </ScrollView>
@@ -282,7 +297,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     paddingVertical: SPACING.xs,
-    paddingHorizontal: SPACING.sm,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,

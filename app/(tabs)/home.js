@@ -1,17 +1,11 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { SPACING } from '@/constants/index';
 import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 import { Ionicons, SimpleLineIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
-import {
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -27,10 +21,18 @@ const CATEGORIES = [
   { id: 'rings', label: 'Rings', image: 'https://picsum.photos/seed/ring/200/200' },
   { id: 'earrings', label: 'Earrings', image: 'https://picsum.photos/seed/ear/200/200' },
   { id: 'necklaces', label: 'Necklaces', image: 'https://picsum.photos/seed/neck/200/200' },
-  { id: 'bracelets', label: 'Bracelets & Bangles', image: 'https://picsum.photos/seed/brace/200/200' },
+  {
+    id: 'bracelets',
+    label: 'Bracelets & Bangles',
+    image: 'https://picsum.photos/seed/brace/200/200',
+  },
   { id: 'latest', label: 'Latest', image: 'https://picsum.photos/seed/latest/200/200' },
   { id: '22kt', label: '22KT', image: 'https://picsum.photos/seed/22kt/200/200' },
-  { id: 'silver-diamonds', label: 'Silver Diamonds', image: 'https://picsum.photos/seed/silver/200/200' },
+  {
+    id: 'silver-diamonds',
+    label: 'Silver Diamonds',
+    image: 'https://picsum.photos/seed/silver/200/200',
+  },
   { id: '9kt', label: '9KT', image: 'https://picsum.photos/seed/9kt/200/200' },
 ];
 
@@ -53,10 +55,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/latest-designs')}
         >
           <View style={styles.categoryCircle}>
-            <Image
-              source={{ uri: cat.image }}
-              style={styles.categoryImage}
-            />
+            <Image source={{ uri: cat.image }} style={styles.categoryImage} />
           </View>
           <AppText variant="sm" weight="regular" style={styles.categoryLabel} numberOfLines={2}>
             {cat.label}
@@ -70,10 +69,7 @@ export default function HomeScreen() {
     () =>
       SHOWCASE_ITEMS.map((item) => (
         <View key={item.id} style={[styles.showcaseCard, { width: SHOWCASE_CARD_W }]}>
-          <Image
-            source={{ uri: item.image }}
-            style={styles.showcaseImage}
-          />
+          <Image source={{ uri: item.image }} style={styles.showcaseImage} />
         </View>
       )),
     []
@@ -89,9 +85,13 @@ export default function HomeScreen() {
             </TouchableOpacity>
             <TouchableOpacity style={styles.locationWrap} activeOpacity={0.8}>
               <View>
-                <AppText variant="xs" weight="regular" style={styles.locationLine1}>Ghumar Mandi</AppText>
+                <AppText variant="xs" weight="regular" style={styles.locationLine1}>
+                  Ghumar Mandi
+                </AppText>
                 <View style={styles.locationLine2Wrap}>
-                  <AppText variant="xs" weight="regular" style={styles.locationLine2}>Ludhiana 142027 </AppText>
+                  <AppText variant="xs" weight="regular" style={styles.locationLine2}>
+                    Ludhiana 142027{' '}
+                  </AppText>
                   <Ionicons name="chevron-down" size={18} color="#fff" />
                 </View>
               </View>
@@ -99,19 +99,17 @@ export default function HomeScreen() {
           </View>
           <View style={styles.headerRight}>
             <View style={styles.clubBadge}>
-              <AppText variant="xs" weight="semiBold" style={styles.clubTextTop}>CLUB</AppText>
-              <AppText variant="xs" weight="regular" style={styles.clubTextBottom}>xClusive</AppText>
+              <AppText variant="xs" weight="semiBold" style={styles.clubTextTop}>
+                CLUB
+              </AppText>
+              <AppText variant="xs" weight="regular" style={styles.clubTextBottom}>
+                xClusive
+              </AppText>
             </View>
-            <TouchableOpacity
-              style={styles.headerIconBtn}
-              onPress={() => router.push('/wishlist')}
-            >
+            <TouchableOpacity style={styles.headerIconBtn} onPress={() => router.push('/wishlist')}>
               <Ionicons name="heart-outline" size={20} color="#fff" />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.headerIconBtn}
-              onPress={() => router.push('/bag')}
-            >
+            <TouchableOpacity style={styles.headerIconBtn} onPress={() => router.push('/bag')}>
               <SimpleLineIcons name="bag" size={18} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -119,7 +117,9 @@ export default function HomeScreen() {
         <View style={styles.searchRow}>
           <View style={styles.searchBox}>
             <Ionicons name="search" size={20} color="#9ca3af" />
-            <AppText variant="base" weight="regular" style={styles.searchPlaceholder}>{"Search 'Category'"}</AppText>
+            <AppText variant="base" weight="regular" style={styles.searchPlaceholder}>
+              {"Search 'Category'"}
+            </AppText>
           </View>
         </View>
       </View>
@@ -135,8 +135,12 @@ export default function HomeScreen() {
         {/* Hero banner - dark teal with gold accent */}
         <View style={styles.hero}>
           <View style={styles.heroContent}>
-            <AppText variant="2xl" weight="semiBold" style={styles.heroTitle}>WOMEN</AppText>
-            <AppText variant="base" weight="regular" style={styles.heroSub}>Discover fine jewelry</AppText>
+            <AppText variant="2xl" weight="semiBold" style={styles.heroTitle}>
+              WOMEN
+            </AppText>
+            <AppText variant="base" weight="regular" style={styles.heroSub}>
+              Discover fine jewelry
+            </AppText>
           </View>
           <View style={styles.heroAccent} />
         </View>
@@ -172,7 +176,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingTop: SPACING.sm + 4,
     paddingBottom: 1,
-    paddingHorizontal: H_PAD,
   },
   headerTop: {
     flexDirection: 'row',

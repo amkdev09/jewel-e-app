@@ -1,18 +1,11 @@
-import { AppText } from '@/components/AppText';
+import AppText from '@/components/ui/appText';
 import { theme } from '@/constants/index';
 import { formatPrice } from '@/src/utils/formatPrice';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import {
-  Dimensions,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, FlatList, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -158,10 +151,7 @@ export default function LatestDesignsScreen() {
           <TouchableOpacity style={styles.headerIconBtn}>
             <Ionicons name="search" size={22} color={TEXT_DARK} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.headerIconBtn}
-            onPress={() => router.push('/wishlist')}
-          >
+          <TouchableOpacity style={styles.headerIconBtn} onPress={() => router.push('/wishlist')}>
             <Ionicons name="heart-outline" size={22} color={TEXT_DARK} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerIconBtn}>

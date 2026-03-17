@@ -1,4 +1,4 @@
-// import { AppText } from '@/components/AppText';
+// import { AppText } from '@/components/ui/appText';
 // import { SPACING } from '@/constants/theme';
 // import { ScreenLayout } from '@/src/layouts/ScreenLayout';
 // import { useAuthStore } from '@/src/store/auth.store';

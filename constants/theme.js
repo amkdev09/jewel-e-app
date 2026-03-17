@@ -16,11 +16,12 @@ export const appColors = {
     i: 'rgb(255, 255, 255)',
   },
   black: '#000',
+  darkText: '#1a1a1a',
   white: '#fff',
   pink: '#DE57E5',
 };
 
-const BASE_SPACING = 4;
+const BASE_SPACING = 2;
 
 export const spacing = {
   unit: BASE_SPACING,
@@ -55,9 +56,9 @@ export const fontSize = {
   base: 14,
   lg: 16,
   xl: 18,
-  "2xl": 24,
-  "3xl": 28,
-  "4xl": 36,
+  '2xl': 24,
+  '3xl': 28,
+  '4xl': 36,
 };
 
 export const iconSizes = {
