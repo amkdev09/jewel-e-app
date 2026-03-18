@@ -1,5 +1,5 @@
-import PasswordInput from '@/components/ui/passwordInput';
 import AppText from '@/components/ui/appText';
+import PasswordInput from '@/components/ui/passwordInput';
 import { APP_COLORS, theme } from '@/constants/index';
 import { AuthLayout } from '@/src/layouts/AuthLayout';
 import { useAuthStore } from '@/src/store/auth.store';
@@ -7,8 +7,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Linking from 'expo-linking';
 import { Link, useRouter } from 'expo-router';
+import { Formik } from 'formik';
 import { useState } from 'react';
 import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import * as Yup from 'yup';
 
 const PURPLE_DARK = '#5b21b6';
 const PURPLE_LIGHT = '#a78bfa';
@@ -22,225 +24,317 @@ const FACEBOOK_BLUE = '#1877f2';
 const STEP_IDENTIFIER = 1;
 const STEP_PASSWORD = 2;
 
+const isValidEmailOrPhone = (value) => {
+  const v = (value || '').trim();
+  if (!v) return false;
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const digits = v.replace(/[^\d]/g, '');
+  const isPhone = digits.length >= 10 && digits.length <= 15;
+  return isEmail || isPhone;
+};
+
 export default function LoginScreen() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
   const [step, setStep] = useState(STEP_IDENTIFIER);
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleContinue = () => {
-    if (!identifier.trim()) {
-      Alert.alert('Error', 'Please enter mobile number or email');
-      return;
-    }
-    if (!agreed) {
-      Alert.alert(
-        'Terms',
-        'Please acknowledge that you are at least 18 and agree to T&C and Privacy Policy.'
-      );
-      return;
-    }
-    setStep(STEP_PASSWORD);
-  };
-
-  const handleLogin = async () => {
-    if (!password.trim()) {
-      Alert.alert('Error', 'Please enter your password');
-      return;
-    }
-    setLoading(true);
-    const result = await login(identifier.trim(), password.trim());
-    setLoading(false);
-    if (result?.success) {
-      router.replace('/(tabs)/home');
-    } else {
-      Alert.alert('Login failed', result?.message || 'Invalid credentials. Please try again.');
-    }
-  };
 
   const handleBackFromPassword = () => {
     setStep(STEP_IDENTIFIER);
-    setPassword('');
   };
 
-  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => {});
-  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => {});
+  const openTc = () => Linking.openURL('https://www.caratlane.com/terms').catch(() => { });
+  const openPrivacy = () => Linking.openURL('https://www.caratlane.com/privacy').catch(() => { });
+
+  const identifierSchema = Yup.object({
+    identifier: Yup.string()
+      .required('Mobile number or email is required')
+      .test('email-or-phone', 'Enter a valid email or mobile number', (v) => isValidEmailOrPhone(v)),
+    agreed: Yup.boolean().oneOf(
+      [true],
+      'Please acknowledge that you are at least 18 and agree to T&C and Privacy Policy.'
+    ),
+  });
+
+  const passwordSchema = Yup.object({
+    password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+  });
+
+  const validationSchema = step === STEP_IDENTIFIER ? identifierSchema : passwordSchema;
 
   return (
     <AuthLayout scroll={true}>
-      <View style={styles.wrapper}>
-        {/* Back arrow */}
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={step === STEP_PASSWORD ? handleBackFromPassword : () => router.back()}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="arrow-back" size={24} color={TEXT_DARK} />
-        </TouchableOpacity>
+      <Formik
+        initialValues={{ identifier: '', password: '', agreed: false }}
+        validationSchema={validationSchema}
+        validateOnMount
+        onSubmit={async (values, helpers) => {
+          const identifier = values.identifier.trim();
+          const password = values.password.trim();
 
-        <View style={styles.scrollContent}>
-          {/* Keyhole icon in gradient circle */}
-          <View style={styles.iconWrap}>
-            <LinearGradient
-              colors={[PURPLE_LIGHT, PURPLE_DARK]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.keyholeCircle}
+          if (step === STEP_IDENTIFIER) {
+            helpers.setTouched({ identifier: true, agreed: true }, true);
+            const errs = await helpers.validateForm();
+            if (errs.identifier || errs.agreed) return;
+            setStep(STEP_PASSWORD);
+            return;
+          }
+
+          helpers.setTouched({ password: true }, true);
+          const errs = await helpers.validateForm();
+          if (errs.password) return;
+
+          try {
+            const result = await login(identifier, password);
+            console.log('result: ', result);
+            if (result?.success) {
+              router.replace('/(tabs)/home');
+            } else {
+              Alert.alert('Login failed', result?.message || 'Invalid credentials. Please try again.');
+            }
+          } finally {
+            helpers.setSubmitting(false);
+          }
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          isSubmitting,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          setFieldTouched,
+        }) => (
+          <View style={styles.wrapper}>
+            {/* Back arrow */}
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={
+                step === STEP_PASSWORD
+                  ? () => {
+                    handleBackFromPassword();
+                    setFieldValue('password', '');
+                    setFieldTouched('password', false, false);
+                  }
+                  : () => router.back()
+              }
+              activeOpacity={0.7}
             >
-              <Ionicons name="key" size={48} color="#fff" />
-            </LinearGradient>
-          </View>
-          <AppText variant="xl" weight="semiBold" style={styles.title}>
-            Welcome back!
-          </AppText>
-          <AppText variant="base" weight="regular" style={styles.desc}>
-            Login to unlock best prices and become an insider for our exclusive launches offers.
-            Complete your profile and get ₹500 worth of xCLusive Points.
-          </AppText>
+              <Ionicons name="arrow-back" size={24} color={TEXT_DARK} />
+            </TouchableOpacity>
 
-          {step === STEP_IDENTIFIER ? (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter Mobile Number or Email"
-                placeholderTextColor={TEXT_MUTED}
-                value={identifier}
-                onChangeText={setIdentifier}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                editable={!loading}
-              />
-              <TouchableOpacity
-                style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
-                onPress={handleContinue}
-                disabled={loading}
-                activeOpacity={0.8}
-              >
-                <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
-                  CONTINUE
-                </AppText>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <View style={styles.identifierRow}>
-                <AppText variant="sm" weight="medium" style={styles.identifierLabel}>
-                  Logging in as
-                </AppText>
-                <AppText variant="sm" weight="semiBold" style={styles.identifierValue} numberOfLines={1}>
-                  {identifier}
-                </AppText>
+            <View style={styles.scrollContent}>
+              {/* Keyhole icon in gradient circle */}
+              <View style={styles.iconWrap}>
+                <LinearGradient
+                  colors={[PURPLE_LIGHT, PURPLE_DARK]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.keyholeCircle}
+                >
+                  <Ionicons name="key" size={48} color="#fff" />
+                </LinearGradient>
               </View>
-              <PasswordInput
-                label="Password"
-                value={password}
-                onChangeText={setPassword}
-                containerStyle={styles.passwordInput}
-                editable={!loading}
-              />
-              <TouchableOpacity
-                style={[styles.continueBtn, loading && styles.continueBtnDisabled]}
-                onPress={handleLogin}
-                disabled={loading}
-                activeOpacity={0.8}
-              >
-                <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
-                  {loading ? 'LOGGING IN...' : 'LOGIN'}
-                </AppText>
-              </TouchableOpacity>
-            </>
-          )}
+              <AppText variant="xl" weight="semiBold" style={styles.title}>
+                Welcome back!
+              </AppText>
+              <AppText variant="base" weight="regular" style={styles.desc}>
+                Login to unlock best prices and become an insider for our exclusive launches offers.
+                Complete your profile and get ₹500 worth of xCLusive Points.
+              </AppText>
 
-          {/* T&C checkbox row - only on identifier step */}
-          {step === STEP_IDENTIFIER && (
-            <View style={styles.tcRow}>
+              {step === STEP_IDENTIFIER ? (
+                <>
+                  <TextInput
+                    style={[styles.input, touched.identifier && errors.identifier && styles.inputError]}
+                    placeholder="Enter Mobile Number or Email"
+                    placeholderTextColor={TEXT_MUTED}
+                    value={values.identifier}
+                    onChangeText={handleChange('identifier')}
+                    onBlur={handleBlur('identifier')}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    editable={!isSubmitting}
+                  />
+                  {touched.identifier && errors.identifier ? (
+                    <AppText variant="xs" weight="regular" style={styles.fieldError}>
+                      {errors.identifier}
+                    </AppText>
+                  ) : null}
+
+                  <LinearGradient
+                    colors={
+                      values.agreed
+                        ? ['rgb(229, 110, 235)', 'rgb(136, 99, 251)']
+                        : [BUTTON_GRAY, BUTTON_GRAY]
+                    }
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={{
+                      borderRadius: 10,
+                      marginBottom: theme?.spacing?.xxl,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={[styles.continueBtn]}
+                      onPress={handleSubmit}
+                      disabled={isSubmitting}
+                      activeOpacity={0.8}
+                    >
+                      <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
+                        CONTINUE
+                      </AppText>
+                    </TouchableOpacity>
+                  </LinearGradient>
+                </>
+              ) : (
+                <>
+                  <View style={styles.identifierRow}>
+                    <AppText variant="sm" weight="medium" style={styles.identifierLabel}>
+                      Logging in as
+                    </AppText>
+                    <AppText variant="sm" weight="semiBold" style={styles.identifierValue} numberOfLines={1}>
+                      {values.identifier}
+                    </AppText>
+                  </View>
+                  <PasswordInput
+                    label="Password"
+                    value={values.password}
+                    onChangeText={handleChange('password')}
+                    containerStyle={styles.passwordInput}
+                    editable={!isSubmitting}
+                  />
+                  {touched.password && errors.password ? (
+                    <AppText variant="xs" weight="regular" style={styles.fieldError}>
+                      {errors.password}
+                    </AppText>
+                  ) : null}
+                  <LinearGradient
+                    colors={
+                      !isSubmitting
+                        ? ['rgb(229, 110, 235)', 'rgb(136, 99, 251)']
+                        : [BUTTON_GRAY, BUTTON_GRAY]
+                    }
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={{
+                      borderRadius: 10,
+                      marginBottom: theme?.spacing?.xxl,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={[styles.continueBtn, isSubmitting && styles.continueBtnDisabled]}
+                      onPress={handleSubmit}
+                      disabled={isSubmitting}
+                      activeOpacity={0.8}
+                    >
+                      <AppText variant="sm" weight="semiBold" style={styles.continueBtnText}>
+                        {isSubmitting ? 'LOGGING IN...' : 'LOGIN'}
+                      </AppText>
+                    </TouchableOpacity>
+                  </LinearGradient>
+                </>
+              )}
+
+              {/* T&C checkbox row - only on identifier step */}
+              {step === STEP_IDENTIFIER && (
+                <View style={styles.tcRow}>
+                  <TouchableOpacity
+                    style={[styles.checkbox, values.agreed && styles.checkboxChecked]}
+                    onPress={() => {
+                      setFieldValue('agreed', !values.agreed);
+                      setFieldTouched('agreed', true, false);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    {values.agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
+                  </TouchableOpacity>
+                  <View style={styles.tcTextWrap}>
+                    <AppText variant="xs" weight="regular" style={styles.tcText}>
+                      By continuing you acknowledge that you are at least 18 years old and have read and
+                      agree to CaratLane&apos;s{' '}
+                    </AppText>
+                    <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
+                      <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                        T&C
+                      </AppText>
+                    </TouchableOpacity>
+                    <AppText variant="xs" weight="regular" style={styles.tcText}>
+                      {' '}
+                    </AppText>
+                    <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
+                      <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
+                        Privacy Policy.
+                      </AppText>
+                    </TouchableOpacity>
+                    {touched.agreed && errors.agreed ? (
+                      <AppText variant="xs" weight="regular" style={styles.fieldError}>
+                        {errors.agreed}
+                      </AppText>
+                    ) : null}
+                  </View>
+                </View>
+              )}
+
+              {/* OR divider */}
+              <View style={styles.orWrap}>
+                <View style={styles.orLine} />
+                <AppText variant="sm" weight="medium" style={styles.orText}>
+                  OR
+                </AppText>
+                <View style={styles.orLine} />
+              </View>
+
+              {/* WhatsApp login */}
               <TouchableOpacity
-                style={[styles.checkbox, agreed && styles.checkboxChecked]}
-                onPress={() => setAgreed(!agreed)}
-                activeOpacity={0.7}
+                style={styles.whatsappBtn}
+                activeOpacity={0.8}
+                onPress={() => router.replace('/(tabs)/home')}
               >
-                {agreed && <Ionicons name="checkmark" size={16} color="#fff" />}
+                <Ionicons name="logo-whatsapp" size={24} color={GREEN_WHATSAPP} />
+                <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>
+                  LOGIN WITH WHATSAPP
+                </AppText>
               </TouchableOpacity>
-              <View style={styles.tcTextWrap}>
-                <AppText variant="xs" weight="regular" style={styles.tcText}>
-                  By continuing you acknowledge that you are at least 18 years old and have read and
-                  agree to CaratLane&apos;s{' '}
-                </AppText>
-                <TouchableOpacity onPress={openTc} style={styles.tcLinkTouch}>
-                  <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
-                    T&C
-                  </AppText>
+
+              {/* Google & Facebook */}
+              <View style={styles.socialRow}>
+                <TouchableOpacity
+                  style={styles.socialBtn}
+                  activeOpacity={0.8}
+                  onPress={() => router.replace('/(tabs)/home')}
+                >
+                  <Ionicons name="logo-google" size={28} color="#4285F4" />
                 </TouchableOpacity>
-                <AppText variant="xs" weight="regular" style={styles.tcText}>
-                  {' '}
-                </AppText>
-                <TouchableOpacity onPress={openPrivacy} style={styles.tcLinkTouch}>
-                  <AppText variant="xs" weight="semiBold" style={styles.tcLink}>
-                    Privacy Policy.
-                  </AppText>
+                <TouchableOpacity
+                  style={[styles.socialBtn, styles.facebookBtn]}
+                  activeOpacity={0.8}
+                  onPress={() => router.replace('/(tabs)/home')}
+                >
+                  <Ionicons name="logo-facebook" size={28} color={FACEBOOK_BLUE} />
                 </TouchableOpacity>
+              </View>
+
+              {/* Sign up link */}
+              <View style={styles.footer}>
+                <AppText variant="base" weight="regular" style={styles.footerText}>
+                  New to CaratLane?
+                </AppText>
+                <Link href="/(auth)/register" asChild>
+                  <TouchableOpacity activeOpacity={0.7}>
+                    <AppText variant="base" weight="semiBold" style={styles.createAccountLink}>
+                      Create Account
+                    </AppText>
+                  </TouchableOpacity>
+                </Link>
               </View>
             </View>
-          )}
-
-          {/* OR divider */}
-          <View style={styles.orWrap}>
-            <View style={styles.orLine} />
-            <AppText variant="sm" weight="medium" style={styles.orText}>
-              OR
-            </AppText>
-            <View style={styles.orLine} />
           </View>
-
-          {/* WhatsApp login */}
-          <TouchableOpacity
-            style={styles.whatsappBtn}
-            activeOpacity={0.8}
-            onPress={() => router.replace('/(tabs)/home')}
-          >
-            <Ionicons name="logo-whatsapp" size={24} color={GREEN_WHATSAPP} />
-            <AppText variant="sm" weight="semiBold" style={styles.whatsappBtnText}>
-              LOGIN WITH WHATSAPP
-            </AppText>
-          </TouchableOpacity>
-
-          {/* Google & Facebook */}
-          <View style={styles.socialRow}>
-            <TouchableOpacity
-              style={styles.socialBtn}
-              activeOpacity={0.8}
-              onPress={() => router.replace('/(tabs)/home')}
-            >
-              <Ionicons name="logo-google" size={28} color="#4285F4" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.socialBtn, styles.facebookBtn]}
-              activeOpacity={0.8}
-              onPress={() => router.replace('/(tabs)/home')}
-            >
-              <Ionicons name="logo-facebook" size={28} color={FACEBOOK_BLUE} />
-            </TouchableOpacity>
-          </View>
-
-          {/* Sign up link */}
-          <View style={styles.footer}>
-            <AppText variant="base" weight="regular" style={styles.footerText}>
-              New to CaratLane?
-            </AppText>
-            <Link href="/(auth)/register" asChild>
-              <TouchableOpacity activeOpacity={0.7}>
-                <AppText variant="base" weight="semiBold" style={styles.createAccountLink}>
-                  Create Account
-                </AppText>
-              </TouchableOpacity>
-            </Link>
-          </View>
-        </View>
-      </View>
-    </AuthLayout>
+        )}
+      </Formik>
+    </AuthLayout >
   );
 }
 
@@ -287,6 +381,14 @@ const styles = StyleSheet.create({
     marginVertical: theme?.spacing?.xxl,
     color: TEXT_DARK,
   },
+  inputError: {
+    borderColor: '#ef4444',
+  },
+  fieldError: {
+    color: '#ef4444',
+    marginTop: -theme?.spacing?.xl,
+    marginBottom: theme?.spacing?.base,
+  },
   identifierRow: {
     marginBottom: theme?.spacing?.sm,
   },
@@ -302,20 +404,15 @@ const styles = StyleSheet.create({
   },
   continueBtn: {
     height: 48,
-    backgroundColor: BUTTON_GRAY,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: theme?.spacing?.xxxl,
   },
   continueBtnDisabled: {
     opacity: 0.6,
   },
   continueBtnText: {
     color: '#fff',
-    fontSize: 14,
-    fontWeight: '700',
-    letterSpacing: 0.5,
   },
   tcRow: {
     flexDirection: 'row',

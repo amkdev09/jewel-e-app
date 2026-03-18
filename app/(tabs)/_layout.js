@@ -1,4 +1,4 @@
-import { AppText } from '@/components/ui/appText';
+import AppText from '@/components/ui/appText';
 import { APP_COLORS, FONT_FAMILY, FONT_SIZE } from '@/constants/index';
 import { FontAwesome6, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';

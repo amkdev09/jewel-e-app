@@ -18,15 +18,30 @@ export const useAuthStore = create(
       login: async (email, password) => {
         set({ isLoading: true });
         try {
-          const { data } = await authServices.login(email, password);
-          const { accessToken, refreshToken, user } = data;
+          const res = await authServices.login(email, password);
+          const payload = res?.data ?? res;
+
+          const accessToken =
+            payload?.accessToken ?? payload?.token ?? payload?.tokens?.accessToken ?? payload?.data?.accessToken;
+          const refreshToken =
+            payload?.refreshToken ?? payload?.tokens?.refreshToken ?? payload?.data?.refreshToken;
+          const user = payload?.user ?? payload?.data?.user ?? payload;
+
+          if (typeof accessToken !== 'string' || !accessToken) {
+            const apiMessage =
+              payload?.message ||
+              payload?.error ||
+              'Login succeeded but no access token was returned by the server.';
+            throw new Error(apiMessage);
+          }
+
           await SecureStore.setItemAsync('token', accessToken);
-          if (refreshToken) {
+          if (typeof refreshToken === 'string' && refreshToken) {
             await SecureStore.setItemAsync('refreshToken', refreshToken);
           }
           set({
             isAuthenticated: true,
-            user: user || data.user,
+            user: user || null,
             isLoading: false,
           });
           return { success: true };
@@ -42,17 +57,23 @@ export const useAuthStore = create(
       register: async (payload) => {
         set({ isLoading: true });
         try {
-          const { data } = await authServices.register(payload);
-          const { accessToken, refreshToken, user } = data;
-          if (accessToken) {
+          const res = await authServices.register(payload);
+          const body = res?.data ?? res;
+
+          const accessToken =
+            body?.accessToken ?? body?.token ?? body?.tokens?.accessToken ?? body?.data?.accessToken;
+          const refreshToken = body?.refreshToken ?? body?.tokens?.refreshToken ?? body?.data?.refreshToken;
+          const user = body?.user ?? body?.data?.user ?? null;
+
+          if (typeof accessToken === 'string' && accessToken) {
             await SecureStore.setItemAsync('token', accessToken);
-            if (refreshToken) {
+            if (typeof refreshToken === 'string' && refreshToken) {
               await SecureStore.setItemAsync('refreshToken', refreshToken);
             }
           }
           set({
             isAuthenticated: !!accessToken,
-            user: user || data.user,
+            user,
             isLoading: false,
           });
           return { success: true };
